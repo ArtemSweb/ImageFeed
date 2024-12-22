@@ -29,7 +29,7 @@ class ImagesListViewController: UIViewController {
         tableView.delegate = self
         
         //стили таблицы
-        tableView.rowHeight = 200
+        //отступы всей таблицы (16(макет)-4(отступы для каждой картинки)=12)
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
     
@@ -70,5 +70,18 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) { }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let image = UIImage(named: photosName[indexPath.row]) else {
+            return 0
+        }
+//        Подсказка: Высота ImageView будет ровно во столько же раз больше высоты image, во сколько раз ширина ImageView больше ширины image.
+        let imageViewWidth = tableView.bounds.width - 32 //32 так как отступы по бокам - 16
+        let imageWidth = image.size.width //реальная ширина картинки
+        let scale = imageViewWidth / imageWidth //индекс скалирования
+        let cellHeight = image.size.height * scale + 8 //8 так как отступы сверху и снизу по 4
+        
+        return cellHeight
+    }
 }
 
