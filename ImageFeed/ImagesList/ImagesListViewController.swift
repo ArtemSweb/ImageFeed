@@ -7,16 +7,15 @@
 
 import UIKit
 
-class ImagesListViewController: UIViewController {
+final class ImagesListViewController: UIViewController {
     
     //Список картинок
     private let photosName: [String] = Array(0..<20).map {"\($0)"}
     //форматирование даты
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMMM yyyy"
         formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
         return formatter
     }()
 
@@ -50,7 +49,7 @@ class ImagesListViewController: UIViewController {
 //MARK: - Расширения для tableView
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        photosName.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
