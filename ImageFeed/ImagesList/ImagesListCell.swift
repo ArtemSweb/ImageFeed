@@ -14,7 +14,7 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet weak var imageCell: UIImageView!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
-    
+    @IBOutlet weak var gradientLine: UIImageView!
     
     @IBAction func likeButtonClick() {
         if isLike {
@@ -24,6 +24,5 @@ final class ImagesListCell: UITableViewCell {
             likeButton.setImage(.active, for: .normal)
             isLike = true
         }
-        
     }
 }

@@ -22,7 +22,7 @@
                                 <color key="backgroundColor" name="YP black"/>
                                 <color key="sectionIndexBackgroundColor" name="YP black"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImagesListCell" rowHeight="235" id="McT-R8-OwE" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="10" reuseIdentifier="ImagesListCell" rowHeight="235" id="McT-R8-OwE" customClass="ImagesListCell" customModule="ImageFeed" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="393" height="235"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="McT-R8-OwE" id="rDC-3U-bnq">
@@ -30,7 +30,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="jgM-lM-QV8" userLabel="Cell Image">
-                                                    <rect key="frame" x="16" y="0.0" width="361" height="235"/>
+                                                    <rect key="frame" x="16" y="4" width="361" height="227"/>
                                                     <userDefinedRuntimeAttributes>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                             <integer key="value" value="16"/>
@@ -38,14 +38,20 @@
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.maskToBounds" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient" translatesAutoresizingMaskIntoConstraints="NO" id="zDb-S6-vyI">
+                                                    <rect key="frame" x="16" y="203" width="361" height="32"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="32" id="Vku-cb-3HZ"/>
+                                                    </constraints>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="13 август 2024" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qd3-31-MSu" userLabel="Date Label">
-                                                    <rect key="frame" x="24.000000000000007" y="211" width="93.666666666666686" height="16"/>
+                                                    <rect key="frame" x="24.000000000000007" y="207" width="93.666666666666686" height="16"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                                     <color key="textColor" red="1" green="0.99436154600000004" blue="0.99236177839999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n77-Nu-QIw" userLabel="Like Button">
-                                                    <rect key="frame" x="333" y="0.0" width="44" height="44"/>
+                                                    <rect key="frame" x="333" y="4" width="44" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="0hT-94-agM"/>
                                                         <constraint firstAttribute="width" constant="44" id="fVa-Gt-ArS"/>
@@ -63,10 +69,13 @@
                                             <color key="backgroundColor" name="YP black"/>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="jgM-lM-QV8" secondAttribute="trailing" constant="16" id="2lI-lH-eNh"/>
-                                                <constraint firstAttribute="bottom" secondItem="jgM-lM-QV8" secondAttribute="bottom" id="JeO-zo-HFd"/>
-                                                <constraint firstItem="jgM-lM-QV8" firstAttribute="top" secondItem="rDC-3U-bnq" secondAttribute="top" id="LdR-xo-0x3"/>
+                                                <constraint firstAttribute="bottom" secondItem="zDb-S6-vyI" secondAttribute="bottom" id="4m0-3W-pKY"/>
+                                                <constraint firstItem="jgM-lM-QV8" firstAttribute="trailing" secondItem="zDb-S6-vyI" secondAttribute="trailing" id="9w4-4i-moQ"/>
+                                                <constraint firstAttribute="bottom" secondItem="jgM-lM-QV8" secondAttribute="bottom" constant="4" id="JeO-zo-HFd"/>
+                                                <constraint firstItem="jgM-lM-QV8" firstAttribute="top" secondItem="rDC-3U-bnq" secondAttribute="top" constant="4" id="LdR-xo-0x3"/>
                                                 <constraint firstItem="jgM-lM-QV8" firstAttribute="trailing" secondItem="n77-Nu-QIw" secondAttribute="trailing" id="Mln-wo-UoQ"/>
                                                 <constraint firstItem="qd3-31-MSu" firstAttribute="leading" secondItem="jgM-lM-QV8" secondAttribute="leading" constant="8" id="X5f-jB-5CC"/>
+                                                <constraint firstItem="zDb-S6-vyI" firstAttribute="leading" secondItem="jgM-lM-QV8" secondAttribute="leading" id="aao-lZ-ahQ"/>
                                                 <constraint firstItem="jgM-lM-QV8" firstAttribute="bottom" secondItem="qd3-31-MSu" secondAttribute="bottom" constant="8" id="nop-a6-UiQ"/>
                                                 <constraint firstItem="n77-Nu-QIw" firstAttribute="top" secondItem="jgM-lM-QV8" secondAttribute="top" id="q8V-HU-bcm"/>
                                                 <constraint firstItem="jgM-lM-QV8" firstAttribute="leading" secondItem="rDC-3U-bnq" secondAttribute="leading" constant="16" id="qvd-bo-cfd"/>
@@ -75,6 +84,7 @@
                                         <accessibility key="accessibilityConfiguration" identifier="ImagesListCell"/>
                                         <connections>
                                             <outlet property="dateLabel" destination="qd3-31-MSu" id="361-iB-icb"/>
+                                            <outlet property="gradientLine" destination="zDb-S6-vyI" id="eUq-Ul-rxi"/>
                                             <outlet property="imageCell" destination="jgM-lM-QV8" id="C3J-Jp-jYM"/>
                                             <outlet property="likeButton" destination="n77-Nu-QIw" id="u0R-kW-lcd"/>
                                         </connections>
@@ -103,6 +113,7 @@
     <resources>
         <image name="0" width="1600" height="1059"/>
         <image name="No Active" width="42" height="42"/>
+        <image name="gradient" width="343" height="30"/>
         <namedColor name="YP White">
             <color red="1" green="1" blue="1" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
