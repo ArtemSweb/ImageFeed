@@ -74,6 +74,7 @@ extension ImagesListViewController: UITableViewDelegate {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return 0
         }
+        
 //        Подсказка: Высота ImageView будет ровно во столько же раз больше высоты image, во сколько раз ширина ImageView больше ширины image.
         let imageViewWidth = tableView.bounds.width - 32 //32 так как отступы по бокам - 16
         let imageWidth = image.size.width //реальная ширина картинки
