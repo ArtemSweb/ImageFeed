@@ -131,6 +131,9 @@
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" image="Exit-icon"/>
+                                        <connections>
+                                            <action selector="logoutFromProfile:" destination="V2C-wj-UDM" eventType="touchUpInside" id="tP6-sJ-ETR"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -168,6 +171,13 @@
                             <constraint firstItem="yow-n1-uDl" firstAttribute="top" secondItem="6uo-ba-uYF" secondAttribute="bottom" constant="8" id="wdh-Lg-z9k"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="avatarImageView" destination="KaC-iS-NmI" id="vNL-d3-A4a"/>
+                        <outlet property="descriptionLabel" destination="D1e-Ai-3Jd" id="hCe-L6-8Il"/>
+                        <outlet property="logoutButton" destination="sFD-wy-w7z" id="3N3-nZ-Tva"/>
+                        <outlet property="nameLabel" destination="TZC-6P-4Qc" id="R7p-qZ-uo9"/>
+                        <outlet property="nicknameLabel" destination="XDQ-Vj-tWh" id="2r7-mu-cbX"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Njv-TK-77B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
