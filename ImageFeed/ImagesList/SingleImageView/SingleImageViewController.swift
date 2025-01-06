@@ -15,9 +15,15 @@ final class SingleImageViewController: UIViewController {
     }
 
     @IBOutlet private var imageView: UIImageView!
-
+    @IBOutlet private weak var returnButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = image
+    }
+    
+    //MARK: - кнопки
+    @IBAction private func didTapReturnButton(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
 }

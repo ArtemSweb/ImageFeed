@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AZa-9f-wCg">
-    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
@@ -100,7 +100,7 @@
                     <navigationItem key="navigationItem" id="NQI-tt-ICr"/>
                     <connections>
                         <outlet property="tableView" destination="zpN-3g-AHx" id="Qjv-WJ-LFn"/>
-                        <segue destination="4Jv-Zd-y1A" kind="show" identifier="ShowSingleImage" id="5nz-iv-VMj"/>
+                        <segue destination="4Jv-Zd-y1A" kind="presentation" identifier="ShowSingleImage" id="5nz-iv-VMj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -110,32 +110,45 @@
         <!--Single Image View Controller-->
         <scene sceneID="pU7-ZR-mZa">
             <objects>
-                <viewController id="4Jv-Zd-y1A" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="4Jv-Zd-y1A" customClass="SingleImageViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="lZT-zu-1Zg">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="XRr-Wq-ibk">
-                                <rect key="frame" x="0.0" y="103" width="393" height="666"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="3" translatesAutoresizingMaskIntoConstraints="NO" id="XRr-Wq-ibk">
+                                <rect key="frame" x="0.0" y="-13" width="393" height="855"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OEz-9s-1EF" userLabel="Return Button">
+                                <rect key="frame" x="9" y="11" width="48" height="38"/>
+                                <color key="tintColor" name="YP White"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" image="Backward"/>
+                                <buttonConfiguration key="configuration" style="plain" image="Backward"/>
+                                <connections>
+                                    <action selector="didTapReturnButton:" destination="4Jv-Zd-y1A" eventType="touchUpInside" id="o8P-gQ-Kx1"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="ZOz-w0-htI"/>
                         <color key="backgroundColor" name="YP black"/>
                         <constraints>
-                            <constraint firstItem="ZOz-w0-htI" firstAttribute="trailing" secondItem="XRr-Wq-ibk" secondAttribute="trailing" id="DoP-wr-Sjy"/>
-                            <constraint firstItem="ZOz-w0-htI" firstAttribute="bottom" secondItem="XRr-Wq-ibk" secondAttribute="bottom" id="RKS-OP-380"/>
-                            <constraint firstItem="XRr-Wq-ibk" firstAttribute="top" secondItem="ZOz-w0-htI" secondAttribute="top" id="ajh-4o-oTc"/>
-                            <constraint firstItem="XRr-Wq-ibk" firstAttribute="leading" secondItem="ZOz-w0-htI" secondAttribute="leading" id="mCI-8S-Sx4"/>
+                            <constraint firstAttribute="trailing" secondItem="XRr-Wq-ibk" secondAttribute="trailing" id="DoP-wr-Sjy"/>
+                            <constraint firstItem="OEz-9s-1EF" firstAttribute="leading" secondItem="ZOz-w0-htI" secondAttribute="leading" constant="9" id="FTT-hF-kgO"/>
+                            <constraint firstAttribute="bottom" secondItem="XRr-Wq-ibk" secondAttribute="bottom" constant="10" id="RKS-OP-380"/>
+                            <constraint firstItem="XRr-Wq-ibk" firstAttribute="top" secondItem="lZT-zu-1Zg" secondAttribute="top" constant="-13" id="ajh-4o-oTc"/>
+                            <constraint firstItem="OEz-9s-1EF" firstAttribute="top" secondItem="ZOz-w0-htI" secondAttribute="top" constant="11" id="emr-3X-gzj"/>
+                            <constraint firstItem="XRr-Wq-ibk" firstAttribute="leading" secondItem="lZT-zu-1Zg" secondAttribute="leading" id="mCI-8S-Sx4"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="yb5-Mn-WJr"/>
                     <connections>
                         <outlet property="imageView" destination="XRr-Wq-ibk" id="ZHh-Hn-sIW"/>
+                        <outlet property="returnButton" destination="OEz-9s-1EF" id="S40-6C-Uq8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cKf-Cp-PCv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2022" y="4"/>
+            <point key="canvasLocation" x="2020.6106870229007" y="3.5211267605633805"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="Ud7-4g-CbP">
@@ -269,6 +282,8 @@
     </scenes>
     <resources>
         <image name="0" width="1600" height="1059"/>
+        <image name="3" width="853" height="1280"/>
+        <image name="Backward" width="24" height="24"/>
         <image name="Exit-icon" width="24" height="24"/>
         <image name="No Active" width="42" height="42"/>
         <image name="avatar" width="70" height="70"/>
