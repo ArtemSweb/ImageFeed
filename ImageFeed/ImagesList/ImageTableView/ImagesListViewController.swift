@@ -11,7 +11,7 @@ final class ImagesListViewController: UIViewController {
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     
     //Список картинок
-    private let photosName: [String] = Array(0..<20).map {"\($0)"}
+    private let photosName: [String] = Array(0...20).map {"\($0)"}
     
     //форматирование даты
     private lazy var dateFormatter: DateFormatter = {
