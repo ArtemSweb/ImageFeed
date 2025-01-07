@@ -148,7 +148,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z4d-YF-NT9" userLabel="Share Button">
-                                <rect key="frame" x="171.66666666666666" y="762" width="50" height="50"/>
+                                <rect key="frame" x="171.66666666666666" y="772" width="50" height="50"/>
                                 <color key="backgroundColor" name="YP black"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="d3b-Qe-xnr"/>
@@ -178,7 +178,7 @@
                             <constraint firstAttribute="bottom" secondItem="5ef-Hj-Uv0" secondAttribute="bottom" id="TiK-MO-l56"/>
                             <constraint firstItem="Z4d-YF-NT9" firstAttribute="centerX" secondItem="ZOz-w0-htI" secondAttribute="centerX" id="chJ-vP-3ZH"/>
                             <constraint firstItem="OEz-9s-1EF" firstAttribute="top" secondItem="ZOz-w0-htI" secondAttribute="top" constant="8" id="emr-3X-gzj"/>
-                            <constraint firstItem="ZOz-w0-htI" firstAttribute="bottom" secondItem="Z4d-YF-NT9" secondAttribute="bottom" constant="40" id="tNL-OR-IMK"/>
+                            <constraint firstItem="ZOz-w0-htI" firstAttribute="bottom" secondItem="Z4d-YF-NT9" secondAttribute="bottom" constant="30" id="tNL-OR-IMK"/>
                             <constraint firstItem="5ef-Hj-Uv0" firstAttribute="top" secondItem="lZT-zu-1Zg" secondAttribute="top" id="xHw-QW-Kik"/>
                         </constraints>
                     </view>
