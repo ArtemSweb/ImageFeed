@@ -14,7 +14,7 @@ final class SingleImageViewController: UIViewController {
             imageView.image = image
             imageView.frame.size = image.size
             
-            doImageSizeAsDispkay(image: image)
+            doImageSizeAsDisplay(image: image)
         }
     }
     
@@ -30,13 +30,12 @@ final class SingleImageViewController: UIViewController {
         imageView.image = image
         imageView.frame.size = image.size
         
-        doImageSizeAsDispkay(image: image)
+        doImageSizeAsDisplay(image: image)
     }
-    
     
     //MARK: - Вспомогательные методы
     //метод зума
-    private func doImageSizeAsDispkay(image: UIImage){
+    private func doImageSizeAsDisplay(image: UIImage){
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
         view.layoutIfNeeded()
@@ -54,7 +53,6 @@ final class SingleImageViewController: UIViewController {
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
-    
     
     //MARK: - кнопки
     @IBAction private func didTapReturnButton(_ sender: Any) {
