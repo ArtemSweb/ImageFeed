@@ -40,9 +40,10 @@ final class ProfileViewController: UIViewController {
     
     private let descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
-        descriptionLabel.text = "Hello, world!"
+        descriptionLabel.text = "lorem  ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates! Quo, voluptatem! Quo, voluptatem! Quo, voluptatem!"
         descriptionLabel.textColor = .ypWhite
         descriptionLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+        descriptionLabel.numberOfLines = 0
         return descriptionLabel
     }()
     
@@ -82,6 +83,7 @@ final class ProfileViewController: UIViewController {
             
             descriptionStackView.topAnchor.constraint(equalTo: avatarImageView.bottomAnchor, constant: 8),
             descriptionStackView.leadingAnchor.constraint(equalTo: avatarImageView.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             
             logoutButton.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
             logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
