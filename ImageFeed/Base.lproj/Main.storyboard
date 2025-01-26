@@ -6,6 +6,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -142,7 +143,7 @@
                                 <color key="tintColor" name="YP White"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="Backward"/>
-                                <buttonConfiguration key="configuration" style="plain" image="Backward"/>
+                                <buttonConfiguration key="configuration" style="plain" image="nav_back_button"/>
                                 <connections>
                                     <action selector="didTapReturnButton:" destination="4Jv-Zd-y1A" eventType="touchUpInside" id="o8P-gQ-Kx1"/>
                                 </connections>
@@ -241,6 +242,9 @@
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <segue destination="upT-62-fcR" kind="show" identifier="ShowWebView" id="pnA-ZT-rbQ"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="2aF-g2-NrA"/>
@@ -257,7 +261,42 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nuR-Eq-eNk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2019" y="373"/>
+            <point key="canvasLocation" x="-2076" y="-659"/>
+        </scene>
+        <!--Web View View Controller-->
+        <scene sceneID="dXa-Sd-i2i">
+            <objects>
+                <viewController id="upT-62-fcR" customClass="WebViewViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2N0-Ed-SJG">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mh5-iQ-8Ah">
+                                <rect key="frame" x="16" y="103" width="361" height="715"/>
+                                <color key="backgroundColor" name="YP White"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="krC-wc-Y1D"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="mh5-iQ-8Ah" firstAttribute="top" secondItem="krC-wc-Y1D" secondAttribute="top" id="8Ab-xP-ph9"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="mh5-iQ-8Ah" secondAttribute="bottom" id="hiU-EG-G0E"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mh5-iQ-8Ah" secondAttribute="trailing" id="nOh-Hb-Fp2"/>
+                            <constraint firstItem="mh5-iQ-8Ah" firstAttribute="leading" secondItem="2N0-Ed-SJG" secondAttribute="leadingMargin" id="sDD-EV-DXE"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Ecx-1B-h45"/>
+                    <connections>
+                        <outlet property="webView" destination="mh5-iQ-8Ah" id="Bhe-Bl-ZQQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yAv-iE-qCp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-889" y="-659"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="4bj-1c-7ko">
@@ -301,7 +340,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mwC-zr-VTd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3149" y="373"/>
+            <point key="canvasLocation" x="-3230" y="-659"/>
         </scene>
     </scenes>
     <resources>
@@ -311,6 +350,7 @@
         <image name="No Active" width="42" height="42"/>
         <image name="Sharing" width="30" height="30"/>
         <image name="gradient" width="343" height="30"/>
+        <image name="nav_back_button" width="24" height="24"/>
         <image name="tab_editorial_active" width="31" height="30"/>
         <image name="tab_profile_active" width="31" height="30"/>
         <namedColor name="YP White">
@@ -319,5 +359,8 @@
         <namedColor name="YP black">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
