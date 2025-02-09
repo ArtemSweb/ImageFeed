@@ -6,8 +6,14 @@
 //
 import UIKit
 
+protocol AuthViewControllerDelegate: AnyObject {
+    func didAuthenticate(_ vc: AuthViewController)
+}
+
 final class AuthViewController: UIViewController {
+    weak var delegate: AuthViewControllerDelegate?
     private let buttonSegueIdentifier = "ShowWebView"
+    private let oAuth2Service = OAuth2Service.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +44,35 @@ final class AuthViewController: UIViewController {
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        oAuth2Service.fetchAuthToken(code: code) { [weak self] result in
+            switch result {
+            case .success(let token):
+                print("Токен: \(token)")
+                
+                DispatchQueue.main.async {
+                    vc.dismiss(animated: true) {
+                        self?.delegate?.didAuthenticate(self!)
+                    }
+                }
+                
+            case .failure(let error):
+                print("Ошибка авторизации: \(error.localizedDescription)")
+                self?.showAuthErrorAlert()
+            }
+        }
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         vc.dismiss(animated: true)
+    }
+    
+    private func showAuthErrorAlert() {
+        let alert = UIAlertController(
+            title: "Упс!",
+            message: "Что-то пошло не так. Попробуйте повторить авторизацию",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "ЧТОЖ", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

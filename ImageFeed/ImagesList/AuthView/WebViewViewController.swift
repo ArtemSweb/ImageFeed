@@ -73,7 +73,9 @@ final class WebViewViewController: UIViewController {
         ]
         
         guard let url = urlComponents.url else { return }
+        print("запустили webViewViewController.loadAuthView")
         let request = URLRequest(url: url)
+        print(request)
         webView.load(request)
     }
 }
@@ -84,6 +86,7 @@ extension WebViewViewController: WKNavigationDelegate {
         decidePolicyFor navigationAction: WKNavigationAction,
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
+        print("запустили WebViewViewController.webView")
         if let code = code(from: navigationAction) {
             delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
@@ -93,6 +96,7 @@ extension WebViewViewController: WKNavigationDelegate {
     }
     
     private func code(from navigationAction: WKNavigationAction) -> String?{
+        print("запустили WebViewViewController.code")
         if
             let url = navigationAction.request.url,
             let urlComponents = URLComponents(string: url.absoluteString),
