@@ -47,8 +47,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
         oAuth2Service.fetchAuthToken(code: code) { [weak self] result in
             switch result {
             case .success(let token):
-                print("Токен: \(token)")
-                
                 DispatchQueue.main.async {
                     vc.dismiss(animated: true) {
                         self?.delegate?.didAuthenticate(self!)
