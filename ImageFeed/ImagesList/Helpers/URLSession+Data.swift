@@ -27,11 +27,14 @@ extension URLSession {
                 if 200 ..< 300 ~= statusCode {
                     fulFillCompletionOnTheMainThread(.success(data))
                 } else {
+                    print("Ошибка запроса. Код ответа сервера: \(statusCode)")
                     fulFillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
                 }
             } else if let error = error {
+                print("Ошибка: \(error)")
                 fulFillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
             } else {
+                print("Неизвестная ошибка NetworkError.urlSessionError")
                 fulFillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         })

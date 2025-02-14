@@ -5,11 +5,10 @@
 //  Created by Артем Солодовников on 09.02.2025.
 //
 import UIKit
-enum Identifire {
+enum IdentifierConstants {
     static let showTabBarController = "TabBarViewController"
     static let showAuthenticationScreen = "ShowAuthenticationScreen"
 }
-
 
 final class SplashViewController: UIViewController {
     private let storage = OAuth2TokenStorage()
@@ -20,8 +19,7 @@ final class SplashViewController: UIViewController {
         if let token = storage.token {
             switchTabBarController()
         } else {
-            print("Нет токена")
-            performSegue(withIdentifier: Identifire.showAuthenticationScreen, sender: nil)
+            performSegue(withIdentifier: IdentifierConstants.showAuthenticationScreen, sender: nil)
         }
         
     }
@@ -33,12 +31,12 @@ final class SplashViewController: UIViewController {
     //MARK: - вспомогательные функции
     private func switchTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Ошибка конфигурации")
+            assertionFailure("Ошибка")
             return
         }
         
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
-            .instantiateViewController(withIdentifier: Identifire.showTabBarController)
+            .instantiateViewController(withIdentifier: IdentifierConstants.showTabBarController)
         
         window.rootViewController = tabBarController
     }
@@ -47,10 +45,10 @@ final class SplashViewController: UIViewController {
 
 extension SplashViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Identifire.showAuthenticationScreen {
+        if segue.identifier == IdentifierConstants.showAuthenticationScreen {
             guard let navigationController = segue.destination as? UINavigationController,
                   let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
-                assertionFailure("Не удалось перейти на экран авторизации")
+                assertionFailure("Ошибка перехода на экран авторизации")
                 return
             }
             authViewController.delegate = self

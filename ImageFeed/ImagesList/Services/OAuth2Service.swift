@@ -21,7 +21,7 @@ class OAuth2Service {
     
     func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let url = URL(string: OAuth2ServiceConstants.baseURL) else {
-            print("Ошибка: не удалось создать URL \(OAuth2ServiceConstants.baseURL)")
+            print("Ошибка: не удалось получить URL \(OAuth2ServiceConstants.baseURL)")
             return nil
         }
         
@@ -38,6 +38,7 @@ class OAuth2Service {
             URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
         guard let httpBody = urlComponents.query?.data(using: .utf8) else {
+            print("Тело (httpBody) не сформировано для POST запроса")
             return nil
         }
         
@@ -64,6 +65,7 @@ class OAuth2Service {
                     }
                 } catch {
                     DispatchQueue.main.async {
+                        print("Ошибка JSON: \(error)")
                         completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Ошибонька JSON"])))
                     }
                 }

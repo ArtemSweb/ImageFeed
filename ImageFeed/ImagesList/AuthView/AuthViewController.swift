@@ -52,7 +52,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
                         self?.delegate?.didAuthenticate(self!)
                     }
                 }
-                
             case .failure(let error):
                 print("Ошибка авторизации: \(error.localizedDescription)")
                 self?.showAuthErrorAlert()
@@ -66,11 +65,11 @@ extension AuthViewController: WebViewViewControllerDelegate {
     
     private func showAuthErrorAlert() {
         let alert = UIAlertController(
-            title: "Упс!",
-            message: "Что-то пошло не так. Попробуйте повторить авторизацию",
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "ЧТОЖ", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "ОК", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
     }
 }
