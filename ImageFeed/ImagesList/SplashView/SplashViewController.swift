@@ -15,13 +15,7 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if let token = storage.token {
-            switchTabBarController()
-        } else {
-            performSegue(withIdentifier: IdentifierConstants.showAuthenticationScreen, sender: nil)
-        }
-        
+        checkTokenExpiration()
     }
     
     override func viewDidLoad() {
@@ -39,6 +33,14 @@ final class SplashViewController: UIViewController {
             .instantiateViewController(withIdentifier: IdentifierConstants.showTabBarController)
         
         window.rootViewController = tabBarController
+    }
+    
+    private func checkTokenExpiration() {
+        if let token = storage.token {
+            switchTabBarController()
+        } else {
+            performSegue(withIdentifier: IdentifierConstants.showAuthenticationScreen, sender: nil)
+        }
     }
 }
 

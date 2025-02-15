@@ -11,12 +11,10 @@ enum OAuth2ServiceConstants {
     static let baseURL: String = "https://unsplash.com/oauth/token"
 }
 
-class OAuth2Service {
-    //Реализация синглтона
+final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
-    //инициализация хранилища
     private let storage = OAuth2TokenStorage()
     
     func makeOAuthTokenRequest(code: String) -> URLRequest? {

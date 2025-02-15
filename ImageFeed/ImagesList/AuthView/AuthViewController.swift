@@ -35,10 +35,10 @@ final class AuthViewController: UIViewController {
     
     //MARK: - стили
     private func configureBackButton() {
-        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button") // 1
-        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button") // 2
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil) // 3
-        navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP black") // 4
+        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button")
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP black")
     }
 }
 
@@ -49,7 +49,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
             case .success(let token):
                 DispatchQueue.main.async {
                     vc.dismiss(animated: true) {
-                        self?.delegate?.didAuthenticate(self!)
+                        guard let self else { return }
+                        self.delegate?.didAuthenticate(self)
                     }
                 }
             case .failure(let error):
