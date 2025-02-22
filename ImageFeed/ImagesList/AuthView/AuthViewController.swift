@@ -43,22 +43,21 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP black")
     }
     
-    func configureProgressHUD() {
+    private func configureProgressHUD() {
         ProgressHUD.colorAnimation = .ypBlack
         ProgressHUD.animationType = .pacmanProgress
     }
-    
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         
-        ProgressHUD.animate()
+        UIBlockingProgressHUD.show()
         
         oAuth2Service.fetchAuthToken(code: code) { [weak self] result in
             guard let self else { return }
-            sleep(5)
-            ProgressHUD.dismiss()
+
+            UIBlockingProgressHUD.dismiss()
             
             switch result {
             case .success(let token):

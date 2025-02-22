@@ -17,7 +17,11 @@ final class OAuth2Service {
     
     private let storage = OAuth2TokenStorage()
     
-    func makeOAuthTokenRequest(code: String) -> URLRequest? {
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
+    private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let url = URL(string: OAuth2ServiceConstants.baseURL) else {
             print("Ошибка: не удалось получить URL \(OAuth2ServiceConstants.baseURL)")
             return nil
@@ -45,12 +49,28 @@ final class OAuth2Service {
     }
     
     func fetchAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        if task != nil {
+            if lastCode != code {
+                task?.cancel()
+            } else {
+                completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Неверный запрос"])))
+                return
+            }
+        } else {
+            if lastCode == code {
+                completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Неверный запрос"])))
+                return
+            }
+        }
+        lastCode = code
+        
         guard let request = makeOAuthTokenRequest(code: code) else {
             completion(.failure(NSError(domain: "OAuth2Service", code: 1, userInfo: [NSLocalizedDescriptionKey: "Не удалось сформировать запрос"])))
             return
         }
         
-        let task = URLSession.shared.data(for: request) { result in
+        let task = urlSession.data(for: request) { result in
             switch result {
             case .success(let data):
                 // декодируем данные
@@ -74,6 +94,7 @@ final class OAuth2Service {
             }
         }
         
+        self.task = task
         task.resume()
     }
 }
