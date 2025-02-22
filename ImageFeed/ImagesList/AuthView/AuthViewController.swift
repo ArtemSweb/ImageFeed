@@ -5,6 +5,7 @@
 //  Created by Артем Солодовников on 25.01.2025.
 //
 import UIKit
+import ProgressHUD
 
 protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController)
@@ -18,6 +19,7 @@ final class AuthViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureBackButton()
+        configureProgressHUD()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -40,22 +42,34 @@ final class AuthViewController: UIViewController {
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         navigationItem.backBarButtonItem?.tintColor = UIColor(named: "YP black")
     }
+    
+    func configureProgressHUD() {
+        ProgressHUD.colorAnimation = .ypBlack
+        ProgressHUD.animationType = .pacmanProgress
+    }
+    
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
+        
+        ProgressHUD.animate()
+        
         oAuth2Service.fetchAuthToken(code: code) { [weak self] result in
+            guard let self else { return }
+            sleep(5)
+            ProgressHUD.dismiss()
+            
             switch result {
             case .success(let token):
                 DispatchQueue.main.async {
                     vc.dismiss(animated: true) {
-                        guard let self else { return }
                         self.delegate?.didAuthenticate(self)
                     }
                 }
             case .failure(let error):
                 print("Ошибка авторизации: \(error.localizedDescription)")
-                self?.showAuthErrorAlert()
+                self.showAuthErrorAlert()
             }
         }
     }
