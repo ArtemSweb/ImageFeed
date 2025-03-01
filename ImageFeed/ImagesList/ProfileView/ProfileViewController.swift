@@ -8,6 +8,8 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
+    
+    
     //MARK: - UI элементы + Верстка
     private let avatarImageView: UIImageView = {
         let image = UIImage(named: "avatar")
@@ -57,6 +59,9 @@ final class ProfileViewController: UIViewController {
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        updateProfile()
+
         
         addViews()
         configurateConstraints()
@@ -88,6 +93,16 @@ final class ProfileViewController: UIViewController {
             logoutButton.centerYAnchor.constraint(equalTo: avatarImageView.centerYAnchor),
             logoutButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
         ])
+    }
+    
+    //MARK: - Вспомогательные функции
+    
+    private func updateProfile(){
+        if let profile = ProfileService.shared.profile {
+            nameLabel.text = profile.name
+            nicknameLabel.text = profile.loginName
+            descriptionLabel.text = profile.bio
+        }
     }
     
     @objc

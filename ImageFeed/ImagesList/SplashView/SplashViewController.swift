@@ -12,6 +12,7 @@ enum IdentifierConstants {
 
 final class SplashViewController: UIViewController {
     private let storage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -20,6 +21,8 @@ final class SplashViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        fetchProfileData()
     }
     
     //MARK: - вспомогательные функции
@@ -63,7 +66,31 @@ extension SplashViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true) { [weak self] in
-            self?.switchTabBarController()
+            
+            guard let self else { return }
+            
+            print("загружаем профиль")
+            self.switchTabBarController()
+            self.fetchProfileData()
+        }
+    }
+    
+    private func fetchProfileData() {
+        
+        profileService.fetchProfile { [weak self] result in
+            print("загружаем профиль-1")
+            switch result {
+            case .success(let profile):
+                guard ProfileService.shared.profile != nil else {
+                    print("Данные профиля не загружаются")
+                    return
+                }
+                print("✅ Профиль успешно загружен: \(profile.name)")
+                
+            case .failure(let error):
+                print("❌ Ошибка загрузки профиля: \(error.localizedDescription)")
+            }
         }
     }
 }
+

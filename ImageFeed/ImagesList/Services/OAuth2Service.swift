@@ -7,10 +7,6 @@
 
 import UIKit
 
-enum OAuth2ServiceConstants {
-    static let baseURL: String = "https://unsplash.com/oauth/token"
-}
-
 final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
@@ -22,8 +18,8 @@ final class OAuth2Service {
     private var lastCode: String?
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
-        guard let url = URL(string: OAuth2ServiceConstants.baseURL) else {
-            print("Ошибка: не удалось получить URL \(OAuth2ServiceConstants.baseURL)")
+        guard let url = URL(string: Constants.baseURL) else {
+            print("Ошибка: не удалось получить URL \(Constants.baseURL)")
             return nil
         }
         
