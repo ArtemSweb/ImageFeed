@@ -19,7 +19,7 @@ final class OAuth2Service {
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let url = URL(string: Constants.baseURL) else {
-            print("Ошибка: не удалось получить URL \(Constants.baseURL)")
+            print("❌ Ошибка: не удалось получить URL \(Constants.baseURL)")
             return nil
         }
         
@@ -36,7 +36,7 @@ final class OAuth2Service {
             URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
         guard let httpBody = urlComponents.query?.data(using: .utf8) else {
-            print("Тело (httpBody) не сформировано для POST запроса")
+            print("❌ Тело (httpBody) не сформировано для POST запроса")
             return nil
         }
         
@@ -72,14 +72,14 @@ final class OAuth2Service {
                 // декодируем данные
                 do {
                     let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    print("Получен Bearer токен: \(tokenResponse.accessToken)")
+                    print("✅ Получен Bearer токен: \(tokenResponse.accessToken)")
                     self.storage.token = tokenResponse.accessToken
                     DispatchQueue.main.async {
                         completion(.success(tokenResponse.accessToken))
                     }
                 } catch {
                     DispatchQueue.main.async {
-                        print("Ошибка JSON: \(error)")
+                        print("❌ Ошибка JSON: \(error)")
                         completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Ошибонька JSON"])))
                     }
                 }

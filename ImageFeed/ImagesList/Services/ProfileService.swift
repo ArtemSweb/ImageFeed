@@ -33,6 +33,7 @@ final class ProfileService {
     
     func fetchProfile(completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
+        
         if let task = task, task.state == .running {
             task.cancel()
         }
@@ -42,7 +43,7 @@ final class ProfileService {
         }
         
         guard let request = createRequest(token: token) else {
-            completion(.failure(NSError(domain: "ProfileService", code: 1, userInfo: [NSLocalizedDescriptionKey: "Не удалось сформировать запрос"])))
+            completion(.failure(NSError(domain: "ProfileService", code: 1, userInfo: [NSLocalizedDescriptionKey: "❌ Не удалось сформировать запрос"])))
             return
         }
         
@@ -53,11 +54,11 @@ final class ProfileService {
                 do {
                     let profile = try JSONDecoder().decode(ProfileResult.self, from: profileResult)
                     self.profile = Profile(profileResult: profile)
+                    completion(.success(Profile(profileResult: profile)))
                 } catch {
-                    print("Ошибка JSON: \(error)")
+                    print("❌ Ошибка JSON: \(error)")
                 }
             case .failure(let error):
-                print("ошибка")
                 completion(.failure(error))
             }
             self.task = nil
@@ -68,7 +69,7 @@ final class ProfileService {
     
     private func createRequest(token: String) -> URLRequest? {
         guard let url = URL(string: "\(Constants.defaultBaseIRL)/me") else {
-            print("Invalid URL")
+            print("❌ Invalid URL")
             return nil
         }
         

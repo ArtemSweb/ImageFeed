@@ -13,22 +13,23 @@ enum IdentifierConstants {
 final class SplashViewController: UIViewController {
     private let storage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         checkTokenExpiration()
+        fetchProfile()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchProfileData()
     }
     
     //MARK: - вспомогательные функции
     private func switchTabBarController() {
         guard let window = UIApplication.shared.windows.first else {
-            assertionFailure("Ошибка")
+            assertionFailure("❌ Ошибка")
             return
         }
         
@@ -53,7 +54,7 @@ extension SplashViewController {
         if segue.identifier == IdentifierConstants.showAuthenticationScreen {
             guard let navigationController = segue.destination as? UINavigationController,
                   let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
-                assertionFailure("Ошибка перехода на экран авторизации")
+                assertionFailure("❌ Ошибка перехода на экран авторизации")
                 return
             }
             authViewController.delegate = self
@@ -68,27 +69,41 @@ extension SplashViewController: AuthViewControllerDelegate {
         vc.dismiss(animated: true) { [weak self] in
             
             guard let self else { return }
-            
-            print("загружаем профиль")
-            self.switchTabBarController()
-            self.fetchProfileData()
+            switchTabBarController()
+            fetchProfile()
         }
     }
     
-    private func fetchProfileData() {
-        
-        profileService.fetchProfile { [weak self] result in
-            print("загружаем профиль-1")
+    private func fetchProfile() {
+        profileService.fetchProfile {result in
             switch result {
             case .success(let profile):
                 guard ProfileService.shared.profile != nil else {
-                    print("Данные профиля не загружаются")
+                    print("❌ Данные профиля не загружаются")
                     return
                 }
-                print("✅ Профиль успешно загружен: \(profile.name)")
+                
+                print("✅ Профиль успешно загружен: \(profile.username)")
+                self.fetchProfileImage(username: profile.username)
+                
                 
             case .failure(let error):
                 print("❌ Ошибка загрузки профиля: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    private func fetchProfileImage(username: String) {
+        profileImageService.fetchProfileImageURL(username: username) { [weak self] result in
+            switch result {
+            case .success(let image):
+                guard ProfileImageService.shared.avatarURL != nil else {
+                    return
+                }
+                print("✅ аватар успешно загружен: \(ProfileImageService.shared.avatarURL)")
+                
+            case .failure(let error):
+                print("❌ Ошибка загрузки аватара: \(error.localizedDescription)")
             }
         }
     }

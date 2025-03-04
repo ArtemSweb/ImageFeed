@@ -9,6 +9,9 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     //MARK: - UI элементы + Верстка
     private let avatarImageView: UIImageView = {
@@ -26,7 +29,6 @@ final class ProfileViewController: UIViewController {
     
     private let nameLabel: UILabel = {
         let nameLabel = UILabel()
-        nameLabel.text = "Екатерина Новикова"
         nameLabel.textColor = .ypWhite
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         return nameLabel
@@ -34,7 +36,6 @@ final class ProfileViewController: UIViewController {
     
     private let nicknameLabel: UILabel = {
         let nicknameLabel = UILabel()
-        nicknameLabel.text = "@ekaterina_nov"
         nicknameLabel.textColor = .ypGrey
         nicknameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return nicknameLabel
@@ -42,7 +43,6 @@ final class ProfileViewController: UIViewController {
     
     private let descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
-        descriptionLabel.text = "lorem  ipsum dolor sit amet consectetur adipisicing elit. Quo, voluptatem! Quasi, voluptates! Quo, voluptatem! Quo, voluptatem! Quo, voluptatem!"
         descriptionLabel.textColor = .ypWhite
         descriptionLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         descriptionLabel.numberOfLines = 0
@@ -59,12 +59,22 @@ final class ProfileViewController: UIViewController {
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        updateProfile()
-
         
+        updateProfile()
         addViews()
         configurateConstraints()
+        
+        //наблюдатель
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()
+            }
+        updateAvatar()
     }
     
     //MARK: - позиционирование элементов
@@ -98,11 +108,24 @@ final class ProfileViewController: UIViewController {
     //MARK: - Вспомогательные функции
     
     private func updateProfile(){
-        if let profile = ProfileService.shared.profile {
+        if let profile = profileService.profile {
             nameLabel.text = profile.name
             nicknameLabel.text = profile.loginName
             descriptionLabel.text = profile.bio
         }
+    }
+    
+    private func updateAvatar() {
+        guard
+            let profileImageURL = profileImageService.avatarURL,
+            let url = URL(string: profileImageURL)
+        else {
+            print(profileImageService.avatarURL)
+            return
+        }
+        
+        print(profileImageURL)
+        // TODO [Sprint 11] Обновить аватар, используя Kingfisher
     }
     
     @objc
