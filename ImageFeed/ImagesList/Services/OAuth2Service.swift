@@ -17,6 +17,46 @@ final class OAuth2Service {
     private var task: URLSessionTask?
     private var lastCode: String?
     
+    func fetchAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        if task != nil {
+            if lastCode != code {
+                task?.cancel()
+            } else {
+                completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Неверный запрос"])))
+                return
+            }
+        } else {
+            if lastCode == code {
+                completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Неверный запрос"])))
+                return
+            }
+        }
+        lastCode = code
+        
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            completion(.failure(NSError(domain: "OAuth2Service", code: 1, userInfo: [NSLocalizedDescriptionKey: "Не удалось сформировать запрос"])))
+            return
+        }
+        
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let responseBody):
+                self.storage.token = responseBody.accessToken
+                print("✅ Токен получен: \(responseBody.accessToken)")
+                completion(.success(responseBody.accessToken))
+            case .failure(let error):
+                print("[OAuth2Service]: Ошибка получения токена: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+        
+        self.task = task
+        task.resume()
+    }
+    
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let url = URL(string: Constants.baseURL) else {
             print("❌ Ошибка: не удалось получить URL \(Constants.baseURL)")
@@ -42,55 +82,5 @@ final class OAuth2Service {
         
         request.httpBody = httpBody
         return request
-    }
-    
-    func fetchAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        assert(Thread.isMainThread)
-        if task != nil {
-            if lastCode != code {
-                task?.cancel()
-            } else {
-                completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Неверный запрос"])))
-                return
-            }
-        } else {
-            if lastCode == code {
-                completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Неверный запрос"])))
-                return
-            }
-        }
-        lastCode = code
-        
-        guard let request = makeOAuthTokenRequest(code: code) else {
-            completion(.failure(NSError(domain: "OAuth2Service", code: 1, userInfo: [NSLocalizedDescriptionKey: "Не удалось сформировать запрос"])))
-            return
-        }
-        
-        let task = urlSession.data(for: request) { result in
-            switch result {
-            case .success(let data):
-                // декодируем данные
-                do {
-                    let tokenResponse = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    print("✅ Получен Bearer токен: \(tokenResponse.accessToken)")
-                    self.storage.token = tokenResponse.accessToken
-                    DispatchQueue.main.async {
-                        completion(.success(tokenResponse.accessToken))
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        print("❌ Ошибка JSON: \(error)")
-                        completion(.failure(NSError(domain: "OAuth2Service", code: 2, userInfo: [NSLocalizedDescriptionKey: "Ошибонька JSON"])))
-                    }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    completion(.failure(error))
-                }
-            }
-        }
-        
-        self.task = task
-        task.resume()
     }
 }

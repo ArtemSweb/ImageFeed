@@ -7,20 +7,6 @@
 
 import UIKit
 
-struct Profile {
-    let username: String
-    let name: String
-    let loginName: String
-    let bio: String?
-    
-    init(profileResult: ProfileResult) {
-        self.username = profileResult.username
-        self.name = "\(profileResult.firstName ?? "") \(profileResult.lastName ?? "")".trimmingCharacters(in: .whitespaces)
-        self.loginName = "@\(profileResult.username)"
-        self.bio = profileResult.bio
-    }
-}
-
 final class ProfileService {
     
     private let storage = OAuth2TokenStorage()
@@ -47,17 +33,14 @@ final class ProfileService {
             return
         }
         
-        let task = urlSession.data(for: request) { result in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self = self else { return }
+            
             switch result {
             case .success(let profileResult):
-                // декодируем данные
-                do {
-                    let profile = try JSONDecoder().decode(ProfileResult.self, from: profileResult)
-                    self.profile = Profile(profileResult: profile)
-                    completion(.success(Profile(profileResult: profile)))
-                } catch {
-                    print("❌ Ошибка JSON: \(error)")
-                }
+                let profile = Profile(profileResult: profileResult)
+                self.profile = profile
+                completion(.success(profile))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -76,7 +59,7 @@ final class ProfileService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
+        
         return request
     }
 }

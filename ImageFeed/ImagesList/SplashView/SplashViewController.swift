@@ -18,7 +18,6 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         checkTokenExpiration()
-        fetchProfile()
     }
     
     override func viewDidLoad() {
@@ -41,7 +40,7 @@ final class SplashViewController: UIViewController {
     
     private func checkTokenExpiration() {
         if let token = storage.token {
-            switchTabBarController()
+            fetchProfile()
         } else {
             performSegue(withIdentifier: IdentifierConstants.showAuthenticationScreen, sender: nil)
         }
@@ -67,15 +66,17 @@ extension SplashViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true) { [weak self] in
-            
             guard let self else { return }
-            switchTabBarController()
-            fetchProfile()
+            self.fetchProfile()
         }
     }
     
     private func fetchProfile() {
-        profileService.fetchProfile {result in
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile {[weak self] result in
+            guard let self else { return }
+            
+            UIBlockingProgressHUD.dismiss()
             switch result {
             case .success(let profile):
                 guard ProfileService.shared.profile != nil else {
@@ -86,6 +87,8 @@ extension SplashViewController: AuthViewControllerDelegate {
                 print("✅ Профиль успешно загружен: \(profile.username)")
                 self.fetchProfileImage(username: profile.username)
                 
+                self.switchTabBarController()
+                
                 
             case .failure(let error):
                 print("❌ Ошибка загрузки профиля: \(error.localizedDescription)")
@@ -95,13 +98,14 @@ extension SplashViewController: AuthViewControllerDelegate {
     
     private func fetchProfileImage(username: String) {
         profileImageService.fetchProfileImageURL(username: username) { [weak self] result in
+            
             switch result {
             case .success(let image):
                 guard ProfileImageService.shared.avatarURL != nil else {
                     return
                 }
                 print("✅ аватар успешно загружен: \(ProfileImageService.shared.avatarURL)")
-                
+
             case .failure(let error):
                 print("❌ Ошибка загрузки аватара: \(error.localizedDescription)")
             }

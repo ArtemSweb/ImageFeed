@@ -6,18 +6,6 @@
 //
 import UIKit
 
-struct UserResult: Codable {
-    let profileImage: ProfileImage
-    
-    enum CodingKeys: String, CodingKey {
-        case profileImage = "profile_image"
-    }
-}
-
-struct ProfileImage: Codable {
-    let small: String
-}
-
 final class ProfileImageService {
     
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
@@ -30,7 +18,7 @@ final class ProfileImageService {
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     
-    func fetchProfileImageURL(username: String, completion: @escaping (Result<UserResult, Error>) -> Void) {
+    func fetchProfileImageURL(username: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         
         if let task = task, task.state == .running {
@@ -42,23 +30,14 @@ final class ProfileImageService {
             return
         }
         
-        let task = urlSession.data(for: request) { result in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self else { return }
+            
             switch result {
-            case .success(let profileResult):
-                // декодируем данные
-                do {
-                    let avatarUrl = try JSONDecoder().decode(UserResult.self, from: profileResult)
-                    self.avatarURL = avatarUrl.profileImage.small
-                    completion(.success(avatarUrl))
-                } catch {
-                    print("❌ Ошибка JSON: \(error)")
-                }
-                
-                NotificationCenter.default
-                    .post(
-                        name: ProfileImageService.didChangeNotification,
-                        object: self,
-                        userInfo: ["URL": profileResult])
+            case .success(let userResult):
+                let avatarUrl = userResult.profileImage.small
+                self.avatarURL = avatarUrl
+                completion(.success(avatarUrl))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -84,5 +63,4 @@ final class ProfileImageService {
         
         return request
     }
-    
 }
