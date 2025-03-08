@@ -47,7 +47,6 @@ final class SplashViewController: UIViewController {
             launchImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             launchImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
-        
     }
     
     //MARK: - вспомогательные функции
@@ -67,8 +66,6 @@ final class SplashViewController: UIViewController {
         if let token = storage.token {
             fetchProfile()
         } else {
-            //performSegue(withIdentifier: IdentifierConstants.showAuthenticationScreen, sender: nil)
-            
             guard let authViewController = UIStoryboard(name: "Main", bundle: nil)
                 .instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
                 return
@@ -82,21 +79,6 @@ final class SplashViewController: UIViewController {
 }
 
 //MARK: - Расширения
-//extension SplashViewController {
-//        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//            if segue.identifier == IdentifierConstants.showAuthenticationScreen {
-//                guard let navigationController = segue.destination as? UINavigationController,
-//                      let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
-//                    assertionFailure("❌ Ошибка перехода на экран авторизации")
-//                    return
-//                }
-//                authViewController.delegate = self
-//            } else {
-//                super.prepare(for: segue, sender: sender)
-//            }
-//        }
-//}
-
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true) { [weak self] in

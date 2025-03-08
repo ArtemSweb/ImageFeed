@@ -49,7 +49,7 @@ final class ProfileImageService {
     
     private func createRequest(userName: String) -> URLRequest? {
         guard let url = URL(string: "\(Constants.defaultBaseIRL)/users/\(userName)") else {
-            print("❌ Invalid URL")
+            print("❌ Некорректный URL")
             return nil
         }
         guard let token = storage.token else {

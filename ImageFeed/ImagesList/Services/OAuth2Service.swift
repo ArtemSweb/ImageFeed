@@ -48,7 +48,7 @@ final class OAuth2Service {
                 print("✅ Токен получен: \(responseBody.accessToken)")
                 completion(.success(responseBody.accessToken))
             case .failure(let error):
-                print("[OAuth2Service]: Ошибка получения токена: \(error.localizedDescription)")
+                print("❌ Ошибка получения токена: \(error.localizedDescription)")
                 completion(.failure(error))
             }
         }

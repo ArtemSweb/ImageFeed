@@ -56,7 +56,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
         
         oAuth2Service.fetchAuthToken(code: code) { [weak self] result in
             guard let self else { return }
-
+            
             UIBlockingProgressHUD.dismiss()
             
             switch result {
@@ -67,7 +67,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
                     }
                 }
             case .failure(let error):
-                print("Ошибка авторизации: \(error.localizedDescription)")
+                print("❌ Ошибка авторизации: \(error.localizedDescription)")
                 self.showAuthErrorAlert()
             }
         }
