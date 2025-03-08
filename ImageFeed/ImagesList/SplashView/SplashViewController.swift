@@ -5,6 +5,7 @@
 //  Created by Артем Солодовников on 09.02.2025.
 //
 import UIKit
+
 enum IdentifierConstants {
     static let showTabBarController = "TabBarViewController"
     static let showAuthenticationScreen = "ShowAuthenticationScreen"
@@ -18,11 +19,6 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         checkTokenExpiration()
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
     }
     
     //MARK: - вспомогательные функции
@@ -46,7 +42,6 @@ final class SplashViewController: UIViewController {
         }
     }
 }
-
 
 extension SplashViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -86,9 +81,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 
                 print("✅ Профиль успешно загружен: \(profile.username)")
                 self.fetchProfileImage(username: profile.username)
-                
                 self.switchTabBarController()
-                
                 
             case .failure(let error):
                 print("❌ Ошибка загрузки профиля: \(error.localizedDescription)")
@@ -98,14 +91,15 @@ extension SplashViewController: AuthViewControllerDelegate {
     
     private func fetchProfileImage(username: String) {
         profileImageService.fetchProfileImageURL(username: username) { [weak self] result in
+            guard let self else { return }
             
             switch result {
             case .success(let image):
                 guard ProfileImageService.shared.avatarURL != nil else {
                     return
                 }
-                print("✅ аватар успешно загружен: \(ProfileImageService.shared.avatarURL)")
-
+                print("✅ аватар успешно загружен")
+                
             case .failure(let error):
                 print("❌ Ошибка загрузки аватара: \(error.localizedDescription)")
             }

@@ -35,7 +35,7 @@ final class ProfileImageService {
             
             switch result {
             case .success(let userResult):
-                let avatarUrl = userResult.profileImage.small
+                let avatarUrl = userResult.profileImage.large
                 self.avatarURL = avatarUrl
                 completion(.success(avatarUrl))
             case .failure(let error):

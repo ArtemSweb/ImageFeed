@@ -33,5 +33,5 @@ struct UserResult: Codable {
 }
 
 struct ProfileImage: Codable {
-    let small: String
+    let large: String
 }
