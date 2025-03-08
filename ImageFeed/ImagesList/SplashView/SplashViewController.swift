@@ -16,9 +16,38 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     
+    //MARK: - UI элементы
+    private let launchImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "launchIcon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }()
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         checkTokenExpiration()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupUI()
+    }
+    
+    //MARK: - Верстка
+    private func setupUI() {
+        view.backgroundColor = .ypBlack
+        view.addSubview(launchImageView)
+        
+        launchImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            launchImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            launchImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+        
     }
     
     //MARK: - вспомогательные функции
@@ -38,25 +67,35 @@ final class SplashViewController: UIViewController {
         if let token = storage.token {
             fetchProfile()
         } else {
-            performSegue(withIdentifier: IdentifierConstants.showAuthenticationScreen, sender: nil)
+            //performSegue(withIdentifier: IdentifierConstants.showAuthenticationScreen, sender: nil)
+            
+            guard let authViewController = UIStoryboard(name: "Main", bundle: nil)
+                .instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
+                return
+            }
+            
+            authViewController.delegate = self
+            authViewController.modalPresentationStyle = .fullScreen
+            present(authViewController, animated: true)
         }
     }
 }
 
-extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == IdentifierConstants.showAuthenticationScreen {
-            guard let navigationController = segue.destination as? UINavigationController,
-                  let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
-                assertionFailure("❌ Ошибка перехода на экран авторизации")
-                return
-            }
-            authViewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
-    }
-}
+//MARK: - Расширения
+//extension SplashViewController {
+//        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//            if segue.identifier == IdentifierConstants.showAuthenticationScreen {
+//                guard let navigationController = segue.destination as? UINavigationController,
+//                      let authViewController = navigationController.viewControllers[0] as? AuthViewController else {
+//                    assertionFailure("❌ Ошибка перехода на экран авторизации")
+//                    return
+//                }
+//                authViewController.delegate = self
+//            } else {
+//                super.prepare(for: segue, sender: sender)
+//            }
+//        }
+//}
 
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {

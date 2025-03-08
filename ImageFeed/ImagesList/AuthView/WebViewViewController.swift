@@ -28,12 +28,6 @@ final class WebViewViewController: UIViewController {
     //MARK: - Life Cycle
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        webView.addObserver(self,
-//                            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-//                            options: .new,
-//                            context: nil)
-//        
-//
         
         estimatedProgressObservation = webView.observe(
                     \.estimatedProgress,

@@ -65,6 +65,8 @@ final class ProfileViewController: UIViewController {
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .ypBlack
 
         //наблюдатель
         profileImageServiceObserver = NotificationCenter.default
