@@ -17,7 +17,7 @@ final class SplashViewController: UIViewController {
     private let profileImageService = ProfileImageService.shared
     
     //MARK: - UI элементы
-    private let launchImageView: UIImageView = {
+    private lazy var launchImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "launchIcon")
         imageView.contentMode = .scaleAspectFit
