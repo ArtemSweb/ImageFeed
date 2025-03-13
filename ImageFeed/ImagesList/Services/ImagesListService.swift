@@ -13,6 +13,7 @@ struct Photo {
     let welcomeDescription: String?
     let thumbImageURL: String
     let largeImageURL: String
+    let fullImageURL: String
     let isLiked: Bool
 }
 
@@ -20,6 +21,9 @@ struct Photo {
 final class ImagesListService {
     
     private let storage = OAuth2TokenStorage()
+    
+    static let shared = ImagesListService()
+    private init() {}
     
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
@@ -31,7 +35,7 @@ final class ImagesListService {
         return formatter
     }()
     
-    private (set) var photos: [Photo] = []
+    private(set) var photos: [Photo] = []
     private var loadingPage = 1
     private let constPhotoPerPage: Int = 10
     
@@ -60,7 +64,7 @@ final class ImagesListService {
                 error == nil,
                 let photoResults = try? JSONDecoder().decode([PhotoResult].self, from: data)
             else {
-                print("❌ Ошибка загрузки или декодирования данных")
+                print("❌ Ошибка декодирования данных")
                 return
             }
             let newPhotos = photoResults.map {
@@ -71,12 +75,16 @@ final class ImagesListService {
                     welcomeDescription: $0.description,
                     thumbImageURL: $0.urls.thumb,
                     largeImageURL: $0.urls.regular,
+                    fullImageURL: $0.urls.full,
                     isLiked: $0.likedByUser
                 )
             }
 
             DispatchQueue.main.async {
-                self.photos.append(contentsOf: newPhotos)
+                let existingIDs = Set(self.photos.map { $0.id })
+                let filteredNewPhotos = newPhotos.filter { !existingIDs.contains($0.id) }
+                
+                self.photos.append(contentsOf: filteredNewPhotos)
                 self.loadingPage += 1
                 NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
             }

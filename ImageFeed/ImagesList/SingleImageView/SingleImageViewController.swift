@@ -7,16 +7,18 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
-    var image: UIImage? {
-        didSet {
-            guard isViewLoaded, let image else { return }
-            
-            imageView.image = image
-            imageView.frame.size = image.size
-            
-            doImageSizeAsDisplay(image: image)
-        }
-    }
+//    var image: String? {
+//        didSet {
+//            guard isViewLoaded, let image else { return }
+//            
+//            imageView.image = image
+//            imageView.frame.size = image.size
+//            
+//            doImageSizeAsDisplay(image: image)
+//        }
+//    }
+    
+    var imageURL: String?
     
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
@@ -26,11 +28,11 @@ final class SingleImageViewController: UIViewController {
         scrollView.minimumZoomScale = 0.1
         scrollView.maximumZoomScale = 1.25
         
-        guard let image else { return }
-        imageView.image = image
-        imageView.frame.size = image.size
-        
-        doImageSizeAsDisplay(image: image)
+//        guard let image else { return }
+//        imageView.image = image
+//        imageView.frame.size = image.size
+//        
+//        doImageSizeAsDisplay(image: imageURL)
     }
     
     //MARK: - Вспомогательные методы
@@ -60,9 +62,9 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction func didTapShareButton(_ sender: Any) {
-        guard let image else { return }
+        guard let imageURL else { return }
         
-        let share = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        let share = UIActivityViewController(activityItems: [imageURL], applicationActivities: nil)
         
         present(share, animated: true , completion: nil)
     }
