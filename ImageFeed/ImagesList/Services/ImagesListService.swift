@@ -14,7 +14,7 @@ struct Photo {
     let thumbImageURL: String
     let largeImageURL: String
     let fullImageURL: String
-    let isLiked: Bool
+    var isLiked: Bool
 }
 
 
@@ -79,17 +79,16 @@ final class ImagesListService {
                     isLiked: $0.likedByUser
                 )
             }
-
+            
             DispatchQueue.main.async {
                 let existingIDs = Set(self.photos.map { $0.id })
-                let filteredNewPhotos = newPhotos.filter { !existingIDs.contains($0.id) }
+                let filteredNewPhotos = newPhotos.lazy.filter { !existingIDs.contains($0.id) }
                 
                 self.photos.append(contentsOf: filteredNewPhotos)
                 self.loadingPage += 1
                 NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
             }
         }
-
         task.resume()
     }
     
@@ -115,5 +114,48 @@ final class ImagesListService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         return request
+    }
+    
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let token = storage.token else {
+            return
+        }
+        
+        guard let url = URL(string: "\(Constants.defaultBaseIRL)/photos\(photoId)/like") else {
+            print("❌ Некорректный URL")
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = isLike ? "POST" : "DELETE"
+        request.setValue("Bearer \(String(describing: token))", forHTTPHeaderField: "Authorization")
+        
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<PhotoResult, Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let responseBody):
+                if let index = self.photos.firstIndex(where: { $0.id == responseBody.id }) {
+                    var photo = self.photos[index]
+                    photo.isLiked = responseBody.likedByUser
+                    self.photos[index] = photo
+                    
+                    DispatchQueue.main.async {
+                        DispatchQueue.main.async {
+                            NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
+                            completion(.success(()))
+                        }
+                        completion(.success(()))
+                    }
+                } else {
+                    let error = NSError(domain: "Couldn't find Asset", code: 404, userInfo: nil)
+                    completion(.failure(error))
+                }
+            case .failure(let error):
+                print("❌ Ошибка получения токена: \(error.localizedDescription)")
+                completion(.failure(error))
+            }
+        }
+        task.resume()
     }
 }

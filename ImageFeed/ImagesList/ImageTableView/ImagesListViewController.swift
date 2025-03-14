@@ -83,11 +83,10 @@ extension ImagesListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: ImagesListCell.reuseIdentifier, for: indexPath)
         
         guard let imageListCell = cell as? ImagesListCell else {
-            print("ошибка создания ячейки таблицы, в таблице отобразится пустая ячейка") //принт для отладки приложения
+            print("ошибка создания ячейки таблицы, в таблице отобразится пустая ячейка")
             return UITableViewCell()
         }
         
-//        configCell(for: imageListCell, with: indexPath)
         let photo = photos[indexPath.row]
         imageListCell.configure(with: photo)
         imageListCell.delegate = self
@@ -107,15 +106,17 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(
-            _ tableView: UITableView, willDisplay cell: UITableViewCell,
-            forRowAt indexPath: IndexPath
-        ) {
-            if indexPath.row == photos.count - 1 {
-                imagesListService.fetchPhotosNextPage()
-            }
+        _ tableView: UITableView, willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        if indexPath.row == photos.count - 1 {
+            imagesListService.fetchPhotosNextPage()
         }
+    }
 }
 
 extension ImagesListViewController: ImagesListCellDelegate {
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
 
+    }
 }

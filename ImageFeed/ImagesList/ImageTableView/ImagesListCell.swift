@@ -8,7 +8,7 @@ import UIKit
 import Kingfisher
 
 protocol ImagesListCellDelegate: AnyObject {
-
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
 
 final class ImagesListCell: UITableViewCell {
@@ -25,9 +25,9 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet weak var gradientLine: UIImageView!
     
     override func prepareForReuse() {
-           super.prepareForReuse()
-           imageCell.kf.cancelDownloadTask()
-       }
+        super.prepareForReuse()
+        imageCell.kf.cancelDownloadTask()
+    }
     
     func configure(with photo: Photo) {
         currentImageURL = photo.thumbImageURL
