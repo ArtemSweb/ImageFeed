@@ -61,6 +61,9 @@
                                                     <state key="normal" image="No Active">
                                                         <color key="titleColor" name="YP White"/>
                                                     </state>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="McT-R8-OwE" eventType="touchUpInside" id="Xel-wL-FWv"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <color key="backgroundColor" name="YP black"/>

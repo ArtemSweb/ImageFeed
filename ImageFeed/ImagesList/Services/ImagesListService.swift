@@ -121,7 +121,7 @@ final class ImagesListService {
             return
         }
         
-        guard let url = URL(string: "\(Constants.defaultBaseIRL)/photos\(photoId)/like") else {
+        guard let url = URL(string: "\(Constants.defaultBaseIRL)/photos/\(photoId)/like") else {
             print("❌ Некорректный URL")
             return
         }
@@ -130,32 +130,56 @@ final class ImagesListService {
         request.httpMethod = isLike ? "POST" : "DELETE"
         request.setValue("Bearer \(String(describing: token))", forHTTPHeaderField: "Authorization")
         
-        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<PhotoResult, Error>) in
+        //                let task = urlSession.objectTask(for: request) { [weak self] (result: Result<PhotoResult, Error>) in
+        //                    guard let self = self else { return }
+        //
+        //                    switch result {
+        //                    case .success(let responseBody):
+        //                        print("Ответ сервера:  \(responseBody.id)")
+        //                        if let index = self.photos.firstIndex(where: { $0.id == responseBody.id }) {
+        //                            var photo = self.photos[index]
+        //                            photo.isLiked.toggle()
+        //                            self.photos[index] = photo
+        //
+        //                            DispatchQueue.main.async {
+        //                                DispatchQueue.main.async {
+        //                                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
+        //                                    completion(.success(()))
+        //                                }
+        //                                completion(.success(()))
+        //                            }
+        //                        } else {
+        //
+        //                            let error = NSError(domain: "Couldn't find Asset", code: 404, userInfo: nil)
+        //                            completion(.failure(error))
+        //                        }
+        //                    case .failure(let error):
+        //                        print("❌ Ошибка: \(error.localizedDescription)")
+        //                        completion(.failure(error))
+        //                    }
+        //                }
+        //
+        let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
-            switch result {
-            case .success(let responseBody):
-                if let index = self.photos.firstIndex(where: { $0.id == responseBody.id }) {
-                    var photo = self.photos[index]
-                    photo.isLiked = responseBody.likedByUser
-                    self.photos[index] = photo
-                    
-                    DispatchQueue.main.async {
-                        DispatchQueue.main.async {
-                            NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
-                            completion(.success(()))
-                        }
-                        completion(.success(()))
-                    }
-                } else {
-                    let error = NSError(domain: "Couldn't find Asset", code: 404, userInfo: nil)
-                    completion(.failure(error))
-                }
-            case .failure(let error):
-                print("❌ Ошибка получения токена: \(error.localizedDescription)")
+            if let error = error {
+                print("Ошибка получения лайка \(error.localizedDescription)")
                 completion(.failure(error))
+                return
+            }
+            
+            if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
+                var photo = self.photos[index]
+                photo.isLiked.toggle()
+                self.photos[index] = photo
+                
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
+                    completion(.success(()))
+                }
             }
         }
+        
         task.resume()
     }
 }

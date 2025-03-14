@@ -34,6 +34,16 @@ final class ImagesListCell: UITableViewCell {
         let placeholder = UIImage(named: "Stub")
         imageCell.kf.indicatorType = .activity
         imageCell.kf.setImage(with: URL(string: photo.thumbImageURL), placeholder: placeholder)
+        setIsLiked(photo.isLiked)
         dateLabel.text = photo.createdAt?.dateTimeString ?? "Неизвестная дата"
+    }
+    
+    func setIsLiked(_ isLiked: Bool) {
+            let likeImage = isLiked ? UIImage(named: "Active.png") : UIImage(named: "No Active.png")
+            likeButton.setImage(likeImage, for: .normal)
+        }
+    
+    @IBAction private func likeButtonClicked() {
+        delegate?.imageListCellDidTapLike(self)
     }
 }

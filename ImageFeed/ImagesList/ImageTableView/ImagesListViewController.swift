@@ -86,7 +86,7 @@ extension ImagesListViewController: UITableViewDataSource {
             print("ошибка создания ячейки таблицы, в таблице отобразится пустая ячейка")
             return UITableViewCell()
         }
-        
+
         let photo = photos[indexPath.row]
         imageListCell.configure(with: photo)
         imageListCell.delegate = self
@@ -106,17 +106,34 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(
-        _ tableView: UITableView, willDisplay cell: UITableViewCell,
-        forRowAt indexPath: IndexPath
-    ) {
-        if indexPath.row == photos.count - 1 {
-            imagesListService.fetchPhotosNextPage()
+            _ tableView: UITableView, willDisplay cell: UITableViewCell,
+            forRowAt indexPath: IndexPath
+        ) {
+            if indexPath.row == photos.count - 1 {
+                imagesListService.fetchPhotosNextPage()
+            }
         }
-    }
 }
 
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
-
+                guard let indexPath = tableView.indexPath(for: cell) else { return }
+                let photo = photos[indexPath.row]
+        
+                UIBlockingProgressHUD.show()
+        
+                imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+                    guard let self = self else { return }
+                    UIBlockingProgressHUD.dismiss()
+        
+                    switch result {
+                    case .success:
+                        self.photos = self.imagesListService.photos
+                        cell.setIsLiked(self.photos[indexPath.row].isLiked)
+                        print("✅ Обработка нажатия лайка прошла успешно")
+                    case .failure:
+                        print("❌ Ошибка лайка, photo.id: \(photo.id)")
+                    }
+                }
     }
 }
