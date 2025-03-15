@@ -6,18 +6,6 @@
 //
 import Foundation
 
-struct Photo {
-    let id: String
-    let size: CGSize
-    let createdAt: Date?
-    let welcomeDescription: String?
-    let thumbImageURL: String
-    let largeImageURL: String
-    let fullImageURL: String
-    var isLiked: Bool
-}
-
-
 final class ImagesListService {
     
     private let storage = OAuth2TokenStorage()
@@ -117,6 +105,10 @@ final class ImagesListService {
     }
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        if let task = task, task.state == .running {
+            task.cancel()
+        }
         guard let token = storage.token else {
             return
         }
@@ -130,35 +122,32 @@ final class ImagesListService {
         request.httpMethod = isLike ? "POST" : "DELETE"
         request.setValue("Bearer \(String(describing: token))", forHTTPHeaderField: "Authorization")
         
-        //                let task = urlSession.objectTask(for: request) { [weak self] (result: Result<PhotoResult, Error>) in
-        //                    guard let self = self else { return }
+        // Экспериментальный метод на дженериках. При таком подходе два раза срабатывает вызов функции лайка
+        //        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<PhotoResponse, Error>) in
+        //            guard let self = self else { return }
         //
-        //                    switch result {
-        //                    case .success(let responseBody):
-        //                        print("Ответ сервера:  \(responseBody.id)")
-        //                        if let index = self.photos.firstIndex(where: { $0.id == responseBody.id }) {
-        //                            var photo = self.photos[index]
-        //                            photo.isLiked.toggle()
-        //                            self.photos[index] = photo
+        //            switch result {
+        //            case .success(let responseBody):
+        //                if let index = self.photos.firstIndex(where: { $0.id == responseBody.photo.id}) {
+        //                    var photo = self.photos[index]
+        //                    photo.isLiked.toggle()
+        //                    self.photos[index] = photo
         //
-        //                            DispatchQueue.main.async {
-        //                                DispatchQueue.main.async {
-        //                                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
-        //                                    completion(.success(()))
-        //                                }
-        //                                completion(.success(()))
-        //                            }
-        //                        } else {
-        //
-        //                            let error = NSError(domain: "Couldn't find Asset", code: 404, userInfo: nil)
-        //                            completion(.failure(error))
-        //                        }
-        //                    case .failure(let error):
-        //                        print("❌ Ошибка: \(error.localizedDescription)")
-        //                        completion(.failure(error))
+        //                    DispatchQueue.main.async {
+        //                        NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
+        //                        completion(.success(()))
         //                    }
+        //                    completion(.success(()))
+        //                } else {
+        //                    let error = NSError(domain: "Couldn't find Asset", code: 404, userInfo: nil)
+        //                    completion(.failure(error))
         //                }
-        //
+        //            case .failure(let error):
+        //                print("❌ Ошибка: \(error.localizedDescription)")
+        //                completion(.failure(error))
+        //            }
+        //        }
+        
         let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
