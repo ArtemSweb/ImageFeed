@@ -122,50 +122,23 @@ final class ImagesListService {
         request.httpMethod = isLike ? "POST" : "DELETE"
         request.setValue("Bearer \(String(describing: token))", forHTTPHeaderField: "Authorization")
         
-        // Экспериментальный метод на дженериках. При таком подходе два раза срабатывает вызов функции лайка
-        //        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<PhotoResponse, Error>) in
-        //            guard let self = self else { return }
-        //
-        //            switch result {
-        //            case .success(let responseBody):
-        //                if let index = self.photos.firstIndex(where: { $0.id == responseBody.photo.id}) {
-        //                    var photo = self.photos[index]
-        //                    photo.isLiked.toggle()
-        //                    self.photos[index] = photo
-        //
-        //                    DispatchQueue.main.async {
-        //                        NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
-        //                        completion(.success(()))
-        //                    }
-        //                    completion(.success(()))
-        //                } else {
-        //                    let error = NSError(domain: "Couldn't find Asset", code: 404, userInfo: nil)
-        //                    completion(.failure(error))
-        //                }
-        //            case .failure(let error):
-        //                print("❌ Ошибка: \(error.localizedDescription)")
-        //                completion(.failure(error))
-        //            }
-        //        }
-        
-        let task = urlSession.dataTask(with: request) { [weak self] data, response, error in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<PhotoResponse, Error>) in
             guard let self = self else { return }
             
-            if let error = error {
-                print("Ошибка получения лайка \(error.localizedDescription)")
-                completion(.failure(error))
-                return
-            }
-            
-            if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-                var photo = self.photos[index]
-                photo.isLiked.toggle()
-                self.photos[index] = photo
-                
-                DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
+            switch result {
+            case .success(let responseBody):
+                if let index = self.photos.firstIndex(where: { $0.id == responseBody.photo.id}) {
+                    var photo = self.photos[index]
+                    photo.isLiked.toggle()
+                    self.photos[index] = photo
                     completion(.success(()))
+                } else {
+                    let error = NSError(domain: "Couldn't find Asset", code: 404, userInfo: nil)
+                    completion(.failure(error))
                 }
+            case .failure(let error):
+                print("❌ Ошибка: \(error.localizedDescription)")
+                completion(.failure(error))
             }
         }
         

@@ -46,10 +46,10 @@ struct UrlsResult: Codable{
 }
 
 //Экспериментальная структура для лайкаю, для дженерик варианта
-//struct PhotoResponse: Codable {
-//    let photo: Photo
-//    
-//    struct Photo: Codable {
-//        let id: String
-//    }
-//}
+struct PhotoResponse: Codable {
+    let photo: Photo
+    
+    struct Photo: Codable {
+        let id: String
+    }
+}
