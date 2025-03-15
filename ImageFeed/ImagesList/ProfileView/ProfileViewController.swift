@@ -12,6 +12,7 @@ final class ProfileViewController: UIViewController {
     
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let logoutService = LogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     //MARK: - UI элементы + Верстка
@@ -157,6 +158,23 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func exitButtonTapped() {
-        print("Logout")
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert
+        )
+        
+        let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
+            self.logoutService.logout()
+            
+            UIApplication.shared.windows.first?.rootViewController = SplashViewController()
+        }
+        
+        let noAction = UIAlertAction(title: "Нет", style: .default)
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        self.present(alert, animated: true)
     }
 }

@@ -5,7 +5,6 @@
 //  Created by Артем Солодовников on 01.03.2025.
 //
 
-//profile
 struct ProfileResult: Decodable {
     let username: String
     let firstName: String?
@@ -25,13 +24,4 @@ struct Profile {
         self.loginName = "@\(profileResult.username)"
         self.bio = profileResult.bio
     }
-}
-
-//profile image
-struct UserResult: Codable {
-    let profileImage: ProfileImage
-}
-
-struct ProfileImage: Codable {
-    let large: String
 }

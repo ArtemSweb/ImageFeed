@@ -100,10 +100,11 @@ extension SplashViewController: AuthViewControllerDelegate {
                     return
                 }
                 
-                print("✅ Профиль успешно загружен: \(profile.username)")
-                self.fetchProfileImage(username: profile.username)
-                self.switchTabBarController()
-                
+                DispatchQueue.main.async {
+                    print("✅ Профиль успешно загружен: \(profile.username)")
+                    self.fetchProfileImage(username: profile.username)
+                    self.switchTabBarController()
+                }
             case .failure(let error):
                 print("❌ Ошибка загрузки профиля: \(error.localizedDescription)")
             }

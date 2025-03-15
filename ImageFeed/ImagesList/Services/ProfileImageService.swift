@@ -30,7 +30,7 @@ final class ProfileImageService {
             return
         }
         
-        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) in
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserProfileImage, Error>) in
             guard let self else { return }
             
             switch result {
@@ -62,5 +62,11 @@ final class ProfileImageService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         return request
+    }
+    
+    func clearAvatar() {
+        avatarURL = nil
+        NotificationCenter.default.post(name: ProfileImageService.didChangeNotification, object: self)
+        print("аватар почищен")
     }
 }
