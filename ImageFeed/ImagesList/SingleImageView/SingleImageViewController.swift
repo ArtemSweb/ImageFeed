@@ -14,7 +14,7 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet private var imageView: UIImageView!
     
     private let placeholderImageView: UIImageView = {
-        let placeholderImage = UIImageView(image: UIImage(named: "stubSingleImage"))
+        let placeholderImage = UIImageView(image: UIImage(named: "single_placeholder"))
         placeholderImage.translatesAutoresizingMaskIntoConstraints = false
         return placeholderImage
     }()
@@ -30,32 +30,6 @@ final class SingleImageViewController: UIViewController {
         setupPlaceholder()
         
         loadImage()
-    }
-    
-    //MARK: - Вспомогательные методы
-    private func loadImage() {
-        guard let imageURL,
-              let url = URL(string: imageURL) else {
-            return
-        }
-        
-        UIBlockingProgressHUD.show()
-        
-        imageView.kf.setImage(with: url,
-                              placeholder: UIImage(named: "single_placeholder"),
-                              options: [.transition(.fade(0.2))]) { [weak self] result in
-            guard let self = self else { return }
-            
-            UIBlockingProgressHUD.dismiss()
-            switch result {
-            case .success(let value):
-                self.placeholderImageView.isHidden = true
-                self.imageView.image = value.image
-                self.doImageSizeAsDisplay(image: value.image)
-            case .failure:
-                self.showAlert()
-            }
-        }
     }
     
     //MARK: - верстка
@@ -86,8 +60,32 @@ final class SingleImageViewController: UIViewController {
     }
     
     //MARK: - вспомогательные методы
-    //метод зума
-    private func doImageSizeAsDisplay(image: UIImage){        
+    private func loadImage() {
+        guard let imageURL,
+              let url = URL(string: imageURL) else {
+            return
+        }
+        
+        UIBlockingProgressHUD.show()
+        
+        imageView.kf.setImage(with: url,
+                              placeholder: UIImage(named: "single_placeholder"),
+                              options: [.transition(.fade(0.2))]) { [weak self] result in
+            guard let self = self else { return }
+            
+            UIBlockingProgressHUD.dismiss()
+            switch result {
+            case .success(let value):
+                self.placeholderImageView.isHidden = true
+                self.imageView.image = value.image
+                self.doImageSizeAsDisplay(image: value.image)
+            case .failure:
+                self.showAlert()
+            }
+        }
+    }
+    
+    private func doImageSizeAsDisplay(image: UIImage){
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
         view.layoutIfNeeded()

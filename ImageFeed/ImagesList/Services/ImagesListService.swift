@@ -169,6 +169,7 @@ final class ImagesListService {
             }
         }
         
+        self.task = task
         task.resume()
     }
     

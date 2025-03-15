@@ -18,7 +18,6 @@ final class ImagesListCell: UITableViewCell {
     private var currentImageURL: String?
     private var isLike = false
     
-    //элементы экрана
     @IBOutlet weak var imageCell: UIImageView!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var likeButton: UIButton!
@@ -39,9 +38,9 @@ final class ImagesListCell: UITableViewCell {
     }
     
     func setIsLiked(_ isLiked: Bool) {
-            let likeImage = isLiked ? UIImage(named: "Active.png") : UIImage(named: "No Active.png")
-            likeButton.setImage(likeImage, for: .normal)
-        }
+        let likeImage = isLiked ? UIImage(named: "Active.png") : UIImage(named: "No Active.png")
+        likeButton.setImage(likeImage, for: .normal)
+    }
     
     @IBAction private func likeButtonClicked() {
         delegate?.imageListCellDidTapLike(self)

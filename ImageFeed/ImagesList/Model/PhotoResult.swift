@@ -45,11 +45,11 @@ struct UrlsResult: Codable{
     let full: String
 }
 
-//Экспериментальная структура для лайка, удалить перед ревью
-struct PhotoResponse: Codable {
-    let photo: Photo
-    
-    struct Photo: Codable {
-        let id: String
-    }
-}
+//Экспериментальная структура для лайкаю, для дженерик варианта
+//struct PhotoResponse: Codable {
+//    let photo: Photo
+//    
+//    struct Photo: Codable {
+//        let id: String
+//    }
+//}
