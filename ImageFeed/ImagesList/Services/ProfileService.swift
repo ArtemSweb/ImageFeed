@@ -13,6 +13,7 @@ final class ProfileService {
     static let shared = ProfileService()
     private init() {}
     
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileServiceDidChange")
     private(set) var profile: Profile? = nil
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
@@ -61,5 +62,11 @@ final class ProfileService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         
         return request
+    }
+    
+    func clearProfile() {
+        profile = nil
+        NotificationCenter.default.post(name: ProfileService.didChangeNotification, object: self)
+        print("профайл почищен")
     }
 }

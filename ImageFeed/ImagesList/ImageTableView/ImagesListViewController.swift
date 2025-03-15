@@ -61,7 +61,9 @@ final class ImagesListViewController: UIViewController {
         
         photos = imagesListService.photos
         
-        if oldCount != newCount {
+        guard newCount > oldCount else { return }
+        
+        if oldCount != newCount{
             tableView.performBatchUpdates {
                 let indexPaths = (oldCount..<newCount).map { i in
                     IndexPath(row: i, section: 0)

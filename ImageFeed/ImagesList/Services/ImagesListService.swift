@@ -171,4 +171,11 @@ final class ImagesListService {
         
         task.resume()
     }
+    
+    func clearPhotos() {
+        loadingPage = 1
+        photos.removeAll()
+        NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
+        print("фоточки почищены")
+    }
 }

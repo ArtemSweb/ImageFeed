@@ -63,4 +63,10 @@ final class ProfileImageService {
         
         return request
     }
+    
+    func clearAvatar() {
+        avatarURL = nil
+        NotificationCenter.default.post(name: ProfileImageService.didChangeNotification, object: self)
+        print("аватар почищен")
+    }
 }
