@@ -13,7 +13,7 @@ final class SingleImageViewController: UIViewController {
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var imageView: UIImageView!
     
-    private let placeholderImageView: UIImageView = {
+    private lazy var placeholderImageView: UIImageView = {
         let placeholderImage = UIImageView(image: UIImage(named: "single_placeholder"))
         placeholderImage.translatesAutoresizingMaskIntoConstraints = false
         return placeholderImage

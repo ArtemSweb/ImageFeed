@@ -17,7 +17,6 @@ private extension DateFormatter {
     static let defaultDateTime: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM yyyy"
-        formatter.locale = Locale(identifier: "ru_RU")
         return formatter
     }()
 }

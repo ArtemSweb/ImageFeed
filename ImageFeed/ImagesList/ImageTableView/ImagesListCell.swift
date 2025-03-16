@@ -18,10 +18,10 @@ final class ImagesListCell: UITableViewCell {
     private var currentImageURL: String?
     private var isLike = false
     
-    @IBOutlet weak var imageCell: UIImageView!
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var likeButton: UIButton!
-    @IBOutlet weak var gradientLine: UIImageView!
+    @IBOutlet private weak var imageCell: UIImageView!
+    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet private weak var likeButton: UIButton!
+    @IBOutlet private weak var gradientLine: UIImageView!
     
     override func prepareForReuse() {
         super.prepareForReuse()
@@ -34,7 +34,7 @@ final class ImagesListCell: UITableViewCell {
         imageCell.kf.indicatorType = .activity
         imageCell.kf.setImage(with: URL(string: photo.thumbImageURL), placeholder: placeholder)
         setIsLiked(photo.isLiked)
-        dateLabel.text = photo.createdAt?.dateTimeString ?? "Неизвестная дата"
+        dateLabel.text = photo.createdAt?.dateTimeString ?? ""
     }
     
     func setIsLiked(_ isLiked: Bool) {

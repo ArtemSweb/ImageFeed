@@ -17,11 +17,11 @@ final class ImagesListService {
     private var task: URLSessionTask?
     
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
-    private let dateFormatter: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime]
-        return formatter
-    }()
+//    private let dateFormatter: ISO8601DateFormatter = {
+//        let formatter = ISO8601DateFormatter()
+//        formatter.formatOptions = [.withInternetDateTime]
+//        return formatter
+//    }()
     
     private(set) var photos: [Photo] = []
     private var loadingPage = 1
@@ -30,7 +30,7 @@ final class ImagesListService {
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         
-        if let task = task, task.state == .running {
+        if let task = task{
             task.cancel()
         }
         
@@ -55,18 +55,7 @@ final class ImagesListService {
                 print("❌ Ошибка декодирования данных")
                 return
             }
-            let newPhotos = photoResults.map {
-                Photo(
-                    id: $0.id,
-                    size: CGSize(width: $0.width, height: $0.height),
-                    createdAt: self.dateFormatter.date(from: $0.createdAt),
-                    welcomeDescription: $0.description,
-                    thumbImageURL: $0.urls.thumb,
-                    largeImageURL: $0.urls.regular,
-                    fullImageURL: $0.urls.full,
-                    isLiked: $0.likedByUser
-                )
-            }
+            let newPhotos = photoResults.map { Photo(photoResults: $0) }
             
             DispatchQueue.main.async {
                 let existingIDs = Set(self.photos.map { $0.id })

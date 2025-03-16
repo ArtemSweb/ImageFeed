@@ -22,7 +22,7 @@ final class ProfileService {
         assert(Thread.isMainThread)
         
         if let task = task, task.state == .running {
-            task.cancel()
+           return
         }
         
         guard let token = storage.token else {

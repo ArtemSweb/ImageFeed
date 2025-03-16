@@ -22,7 +22,7 @@ final class ProfileImageService {
         assert(Thread.isMainThread)
         
         if let task = task, task.state == .running {
-            task.cancel()
+            return
         }
         
         guard let request = createRequest(userName: username) else {
