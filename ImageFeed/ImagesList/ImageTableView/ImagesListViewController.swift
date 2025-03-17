@@ -7,7 +7,6 @@
 
 import UIKit
 
-
 final class ImagesListViewController: UIViewController {
     
     private let imagesListService = ImagesListService.shared

@@ -17,11 +17,6 @@ final class ImagesListService {
     private var task: URLSessionTask?
     
     static let didChangeNotification = Notification.Name("ImagesListServiceDidChange")
-//    private let dateFormatter: ISO8601DateFormatter = {
-//        let formatter = ISO8601DateFormatter()
-//        formatter.formatOptions = [.withInternetDateTime]
-//        return formatter
-//    }()
     
     private(set) var photos: [Photo] = []
     private var loadingPage = 1
@@ -31,7 +26,7 @@ final class ImagesListService {
         assert(Thread.isMainThread)
         
         if let task = task{
-            task.cancel()
+            return
         }
         
         guard let token = storage.token else {
@@ -65,7 +60,9 @@ final class ImagesListService {
                 self.loadingPage += 1
                 NotificationCenter.default.post(name: ImagesListService.didChangeNotification, object: self)
             }
+            self.task = nil
         }
+        self.task = task
         task.resume()
     }
     
@@ -95,8 +92,8 @@ final class ImagesListService {
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
-        if let task = task, task.state == .running {
-            task.cancel()
+        if let task = task{
+            return
         }
         guard let token = storage.token else {
             return
@@ -129,8 +126,8 @@ final class ImagesListService {
                 print("❌ Ошибка: \(error.localizedDescription)")
                 completion(.failure(error))
             }
+            self.task = nil
         }
-        
         self.task = task
         task.resume()
     }
