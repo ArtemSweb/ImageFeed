@@ -48,7 +48,7 @@ final class ProfileImageService {
     }
     
     private func createRequest(userName: String) -> URLRequest? {
-        guard let url = URL(string: "\(Constants.defaultBaseIRL)/users/\(userName)") else {
+        guard let url = URL(string: "\(Constants.defaultBaseURL)/users/\(userName)") else {
             print("❌ Некорректный URL")
             return nil
         }

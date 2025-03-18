@@ -67,7 +67,7 @@ final class ImagesListService {
     }
     
     private func createRequest(token: String) -> URLRequest? {
-        guard let url = URL(string: "\(Constants.defaultBaseIRL)/photos") else {
+        guard let url = URL(string: "\(Constants.defaultBaseURL)/photos") else {
             print("❌ Некорректный URL")
             return nil
         }
@@ -99,7 +99,7 @@ final class ImagesListService {
             return
         }
         
-        guard let url = URL(string: "\(Constants.defaultBaseIRL)/photos/\(photoId)/like") else {
+        guard let url = URL(string: "\(Constants.defaultBaseURL)/photos/\(photoId)/like") else {
             print("❌ Некорректный URL")
             return
         }

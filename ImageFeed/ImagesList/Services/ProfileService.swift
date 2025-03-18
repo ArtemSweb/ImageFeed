@@ -52,7 +52,7 @@ final class ProfileService {
     }
     
     private func createRequest(token: String) -> URLRequest? {
-        guard let url = URL(string: "\(Constants.defaultBaseIRL)/me") else {
+        guard let url = URL(string: "\(Constants.defaultBaseURL)/me") else {
             print("❌ Некорректный URL")
             return nil
         }
