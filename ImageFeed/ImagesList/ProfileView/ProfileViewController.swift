@@ -4,16 +4,31 @@
 //
 //  Created by Артем Солодовников on 01.01.2025.
 //
-
 import Kingfisher
 import UIKit
 
-final class ProfileViewController: UIViewController {
+protocol ProfileViewControllerProtocol: AnyObject {
+    func updateProfile(name: String, nickname: String, description: String)
+    func updateAvatar(with url: URL)
+    func showLogoutAlert()
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    private let logoutService = LogoutService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
+    private var presenter: ProfilePresenterProtocol?
+    
+    init(presenter: ProfilePresenterProtocol?) {
+        super.init(nibName: nil, bundle: nil)
+        self.presenter = presenter
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(_ presenter: ProfilePresenterProtocol) {
+        self.presenter = presenter
+    }
     
     //MARK: - UI элементы + Верстка
     private let avatarImageView: UIImageView = {
@@ -61,24 +76,13 @@ final class ProfileViewController: UIViewController {
         descriptionStackView.spacing = 8
         return descriptionStackView
     }()
+    
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .ypBlack
-        
-        //наблюдатель
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self = self else { return }
-                self.updateAvatar()
-            }
-        updateAvatar()
-        updateProfile()
+        presenter?.viewDidLoad()
         
         addViews()
         configurateConstraints()
@@ -120,23 +124,13 @@ final class ProfileViewController: UIViewController {
     }
     
     //MARK: - Вспомогательные функции
-    private func updateProfile() {
-        if let profile = profileService.profile {
-            nameLabel.text = profile.name
-            nicknameLabel.text = profile.loginName
-            descriptionLabel.text = profile.bio
-        }
+    func updateProfile(name: String, nickname: String, description: String) {
+        nameLabel.text = name
+        nicknameLabel.text = nickname
+        descriptionLabel.text = description
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarURL,
-            let url = URL(string: profileImageURL)
-        else {
-            print("❌ Ошибка получения аватара из хранилища")
-            return
-        }
-        
+    func updateAvatar(with url: URL) {
         let processor = RoundCornerImageProcessor(cornerRadius: 50, backgroundColor: .ypBlack)
         
         avatarImageView.kf.setImage(
@@ -158,6 +152,10 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func exitButtonTapped() {
+        self.presenter?.exitButtonTapped()
+    }
+    
+    func showLogoutAlert(){
         let alert = UIAlertController(
             title: "Пока, пока!",
             message: "Уверены что хотите выйти?",
@@ -165,9 +163,8 @@ final class ProfileViewController: UIViewController {
         )
         
         let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
-            self.logoutService.logout()
-            
-            UIApplication.shared.windows.first?.rootViewController = SplashViewController()
+            guard let presenter = self.presenter as? ProfilePresenter else { return }
+            presenter.approveLogout()
         }
         
         let noAction = UIAlertAction(title: "Нет", style: .default)
