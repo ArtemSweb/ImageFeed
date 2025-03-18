@@ -14,7 +14,7 @@ final class ProfileService {
     private init() {}
     
     static let didChangeNotification = Notification.Name(rawValue: "ProfileServiceDidChange")
-    private(set) var profile: Profile? = nil
+    var profile: Profile? = nil
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     
