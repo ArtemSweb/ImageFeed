@@ -31,13 +31,13 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
     }
     
     //MARK: - UI элементы + Верстка
-    private let avatarImageView: UIImageView = {
+    let avatarImageView: UIImageView = {
         let image = UIImage(named: "avatar")
         let avatarImageView = UIImageView(image: image)
         return avatarImageView
     }()
     
-    private let logoutButton: UIButton = {
+    let logoutButton: UIButton = {
         let button = UIButton(type: .system)
         button.setImage(
             UIImage(named: "Exit-icon")?.withRenderingMode(.alwaysOriginal),
@@ -47,21 +47,21 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         return button
     }()
     
-    private let nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let nameLabel = UILabel()
         nameLabel.textColor = .ypWhite
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .bold)
         return nameLabel
     }()
     
-    private let nicknameLabel: UILabel = {
+    let nicknameLabel: UILabel = {
         let nicknameLabel = UILabel()
         nicknameLabel.textColor = .ypGrey
         nicknameLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         return nicknameLabel
     }()
     
-    private let descriptionLabel: UILabel = {
+    let descriptionLabel: UILabel = {
         let descriptionLabel = UILabel()
         descriptionLabel.textColor = .ypWhite
         descriptionLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
