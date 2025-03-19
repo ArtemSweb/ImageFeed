@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol ImagesListViewControllerProtocol: AnyObject {
+protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListViewPresenterProtocol? { get set }
     
    func updateTableViewAnimated(oldCount: Int, newCount: Int)
@@ -20,15 +20,14 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     private var imageListViewControllerObserver: NSObjectProtocol?
     
     var presenter: ImagesListViewPresenterProtocol?
-    
+
     private var photos: [Photo] = []
     
     @IBOutlet private var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        print("[ImagesListViewController] viewDidLoad() [START]")
+  
         presenter?.viewDidLoad()
         
         tableView.dataSource = self
@@ -49,13 +48,13 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showSingleImageSegueIdentifier {
             guard let viewController = segue.destination as? SingleImageViewController,
-                  let indexPath = sender as? IndexPath
+                  let indexPath = sender as? IndexPath,
+                  let presenter = presenter
             else {
                 assertionFailure("Invalid segue destination")
                 return
             }
-            
-            let image = photos[indexPath.row]
+            let image = presenter.getPhoto(index: indexPath.row)
             viewController.imageURL = image.largeImageURL
         }
         else {
@@ -69,22 +68,26 @@ final class ImagesListViewController: UIViewController & ImagesListViewControlle
     }
     
     func updateTableViewAnimated(oldCount: Int, newCount: Int) {
+        
         guard newCount > oldCount else { return }
         
-            tableView.performBatchUpdates {
-                let indexPaths = (oldCount..<newCount).map { i in
-                    IndexPath(row: i, section: 0)
-                }
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            } completion: { _ in }
+        let indexPaths = (oldCount..<newCount).map {
+            IndexPath(row: $0, section: 0)
+        }
         
+        tableView.performBatchUpdates {
+            tableView.insertRows(at: indexPaths, with: .automatic)
+        }
     }
 }
 
 //MARK: - Расширения для tableView
 extension ImagesListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        photos.count
+        guard let presenter else {
+            return 0
+        }
+        return presenter.photosCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -95,8 +98,12 @@ extension ImagesListViewController: UITableViewDataSource {
             print("ошибка создания ячейки таблицы, в таблице отобразится пустая ячейка")
             return UITableViewCell()
         }
+        let photo = presenter?.getPhoto(index: indexPath.row)
         
-        let photo = photos[indexPath.row]
+        guard let photo else {
+            return UITableViewCell()
+        }
+        
         imageListCell.configure(with: photo)
         imageListCell.delegate = self
         return imageListCell
@@ -109,7 +116,10 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let photo = photos[indexPath.row]
+        guard let presenter else {
+            return 0
+        }
+        let photo = presenter.getPhoto(index: indexPath.row)
         let tableWidth = tableView.bounds.width - tableView.layoutMargins.left - tableView.layoutMargins.right
         return (photo.size.height / photo.size.width) * tableWidth + 8
     }
@@ -118,9 +128,9 @@ extension ImagesListViewController: UITableViewDelegate {
         _ tableView: UITableView, willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
-        if indexPath.row == photos.count - 1 {
-            imagesListService.fetchPhotosNextPage()
-        }
+        guard let presenter else { return }
+        
+        presenter.willDisplayRow(at: indexPath.row)
     }
 }
 
