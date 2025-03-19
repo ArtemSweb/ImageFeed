@@ -44,6 +44,7 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
             for: .normal)
         button.addTarget(
             self, action: #selector(exitButtonTapped), for: .touchUpInside)
+        button.accessibilityIdentifier = "Logout"
         return button
     }()
     
