@@ -27,6 +27,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
     
     func viewDidLoad() {
+        print("[ProfilePresenter] viewDidLoad")
         observeSettings()
         updateAvatar()
         updateProfile()

@@ -7,11 +7,19 @@
 
 import UIKit
 
-final class ImagesListViewController: UIViewController {
+public protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListViewPresenterProtocol? { get set }
+    
+   func updateTableViewAnimated(oldCount: Int, newCount: Int)
+}
+
+final class ImagesListViewController: UIViewController & ImagesListViewControllerProtocol {
     
     private let imagesListService = ImagesListService.shared
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
     private var imageListViewControllerObserver: NSObjectProtocol?
+    
+    var presenter: ImagesListViewPresenterProtocol?
     
     private var photos: [Photo] = []
     
@@ -20,20 +28,21 @@ final class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("[ImagesListViewController] viewDidLoad() [START]")
+        presenter?.viewDidLoad()
+        
         tableView.dataSource = self
         tableView.delegate = self
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         
-        imageListViewControllerObserver = NotificationCenter.default.addObserver(
-            forName: ImagesListService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            self?.updateTableViewAnimated()
-        }
-        
-        imagesListService.fetchPhotosNextPage()
+//        imageListViewControllerObserver = NotificationCenter.default.addObserver(
+//            forName: ImagesListService.didChangeNotification,
+//            object: nil,
+//            queue: .main
+//        ) { [weak self] _ in
+//            self?.updateTableViewAnimated()
+//        }
     }
     
     //MARK: - Реализация segue
@@ -54,22 +63,21 @@ final class ImagesListViewController: UIViewController {
         }
     }
     
-    func updateTableViewAnimated() {
-        let oldCount = photos.count
-        let newCount = imagesListService.photos.count
-        
-        photos = imagesListService.photos
-        
+    // MARK: - Injection
+    func configure(_ presenter: ImagesListViewPresenterProtocol) {
+        self.presenter = presenter
+    }
+    
+    func updateTableViewAnimated(oldCount: Int, newCount: Int) {
         guard newCount > oldCount else { return }
         
-        if oldCount != newCount{
             tableView.performBatchUpdates {
                 let indexPaths = (oldCount..<newCount).map { i in
                     IndexPath(row: i, section: 0)
                 }
                 tableView.insertRows(at: indexPaths, with: .automatic)
             } completion: { _ in }
-        }
+        
     }
 }
 
