@@ -17,7 +17,7 @@ protocol ImagesListViewPresenterProtocol {
 }
 
 final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
-    private let imagesListService = ImagesListService.shared
+    private let imagesListService: ImagesListServiceProtocol
     private var imageListViewControllerObserver: NSObjectProtocol?
     
     weak var view: ImagesListViewControllerProtocol?
@@ -28,8 +28,9 @@ final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
         return photos.count
     }
     
-    init(view: ImagesListViewControllerProtocol) {
+    init(view: ImagesListViewControllerProtocol, service: ImagesListServiceProtocol = ImagesListService.shared) {
         self.view = view
+        self.imagesListService = service
     }
     
     func viewDidLoad() {
