@@ -13,6 +13,7 @@ protocol ImagesListViewPresenterProtocol {
     func viewDidLoad()
     func getPhoto(index: Int) -> Photo
     func willDisplayRow(at index: Int)
+    func didTapLike(at index: Int)
 }
 
 final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
@@ -24,8 +25,8 @@ final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
     var photos: [Photo] = []
     
     var photosCount: Int {
-            return photos.count
-        }
+        return photos.count
+    }
     
     init(view: ImagesListViewControllerProtocol) {
         self.view = view
@@ -35,7 +36,6 @@ final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
         updateTableViewAnimated()
         imagesListService.fetchPhotosNextPage()
     }
-    
     
     //MARK: - вспомогательные методы
     func updateTableViewAnimated() {
@@ -49,12 +49,10 @@ final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
             
             let oldCount = self.photosCount
             let newCount = self.imagesListService.photos.count
-            print("[presenter]: newCount: \(newCount), oldCount: \(oldCount)")
+            
             photos = self.imagesListService.photos
             
             guard newCount > oldCount else { return }
-            
-            print("[presenter]: photos.count: \(photos.count)")
             
             view?.updateTableViewAnimated(oldCount: oldCount, newCount: newCount)
         }
@@ -65,8 +63,35 @@ final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
     }
     
     func willDisplayRow(at index: Int) {
-            if index == photos.count - 1 {
-                imagesListService.fetchPhotosNextPage()
+        if index == photos.count - 1 {
+            imagesListService.fetchPhotosNextPage()
+        }
+    }
+    
+    func didTapLike(at index: Int) {
+        
+        guard let view else { return }
+        let photo = photos[index]
+        
+        view.showProgressHUD()
+        
+        imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { [weak self] result in
+            guard let self = self
+            else { return }
+            
+            DispatchQueue.main.async {
+                self.view?.hideProgressHUD()
+                
+                switch result {
+                case .success:
+                    self.photos = self.imagesListService.photos
+                    self.view?.updateLikeButton(at: index, isLiked: self.photos[index].isLiked)
+                    print("✅ Обработка нажатия лайка прошла успешно")
+                    
+                case .failure:
+                    print("❌ Ошибка лайка, photo.id: \(photo.id)")
+                }
             }
         }
+    }
 }
