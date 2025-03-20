@@ -14,7 +14,7 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     private init() {}
     
-    private(set) var avatarURL: String?
+    var avatarURL: String?
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     
@@ -48,7 +48,7 @@ final class ProfileImageService {
     }
     
     private func createRequest(userName: String) -> URLRequest? {
-        guard let url = URL(string: "\(Constants.defaultBaseIRL)/users/\(userName)") else {
+        guard let url = URL(string: "\(Constants.defaultBaseURL)/users/\(userName)") else {
             print("❌ Некорректный URL")
             return nil
         }
