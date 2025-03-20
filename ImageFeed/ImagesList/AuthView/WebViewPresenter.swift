@@ -20,14 +20,14 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     var authHelper: AuthHelperProtocol
     
     init(authHelper: AuthHelperProtocol) {
-            self.authHelper = authHelper
-        }
+        self.authHelper = authHelper
+    }
     
     func viewDidLoad() {
         guard let request = authHelper.authRequest() else { return }
-                
-                view?.load(request: request)
-                didUpdateProgressValue(0)
+        
+        view?.load(request: request)
+        didUpdateProgressValue(0)
     }
     
     func didUpdateProgressValue(_ newValue: Double) {
